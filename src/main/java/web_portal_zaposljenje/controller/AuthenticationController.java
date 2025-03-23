@@ -1,2 +1,4 @@
-package web_portal_zaposljenje.controller;public class AuthenticationController {
+package web_portal_zaposljenje.controller;
+
+public class AuthenticationController {
 }

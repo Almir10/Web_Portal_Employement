@@ -1,2 +1,4 @@
-package web_portal_zaposljenje.repository;public interface IUserRepository {
+package web_portal_zaposljenje.repository;
+
+public interface IUserRepository {
 }
