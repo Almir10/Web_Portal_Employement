@@ -10,6 +10,7 @@ import web_portal_zaposljenje.repository.IUserRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -42,6 +43,11 @@ public class UserService implements IUserService{
         user.setRoles(roles);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findByEmail(String email){
+        return userRepository.findByEmail(email);
     }
 
 

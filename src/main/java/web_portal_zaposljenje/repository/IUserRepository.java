@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public interface IUserRepository extends JpaRepository<User, Long> {
 
-    // Vec postojece metode Spring Hibernate:
+    // Vec postojece metode Hibernate:
 
     // - findAll() - dobija sve korisnike
     // - findById(id) - dobija korisnika po ID-u
