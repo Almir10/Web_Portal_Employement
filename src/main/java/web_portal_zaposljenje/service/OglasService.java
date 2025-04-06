@@ -39,4 +39,19 @@ public class OglasService implements IOglasService{
         return oglasRepository.advancedSearch(pozicija, lokacija, tip, plata, vjestinaId);
     }
 
+    @Override
+    public List<Oglas> findAllOglasi(){
+        return oglasRepository.findAll();
+    }
+
+    @Override
+    public void deleteById(Long id){
+        oglasRepository.deleteById(id);
+    }
+
+    @Override
+    public boolean existsById(Long id){
+        return oglasRepository.existsById(id);
+    }
+
 }

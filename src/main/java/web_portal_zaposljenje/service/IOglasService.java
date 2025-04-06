@@ -10,6 +10,12 @@ public interface IOglasService {
 
     Oglas save(Oglas oglas, Set<Long> vjestinaIds);
 
-    public List<Oglas> advancedSearch(String pozicija, String lokacija, String tip, Double plata, Long vjestinaId);
+    List<Oglas> advancedSearch(String pozicija, String lokacija, String tip, Double plata, Long vjestinaId);
+
+    List<Oglas> findAllOglasi();
+
+    void deleteById(Long id);
+
+    boolean existsById(Long id);
 
 }
