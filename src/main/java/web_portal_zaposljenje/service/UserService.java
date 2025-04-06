@@ -27,6 +27,7 @@ public class UserService implements IUserService{
     private PasswordEncoder passwordEncoder;
 
 
+    @Override
     public User saveUser(User user, List<Long> roleIds){
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -43,6 +44,26 @@ public class UserService implements IUserService{
         user.setRoles(roles);
 
         return userRepository.save(user);
+    }
+
+    @Override
+    public Optional<User> findById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public boolean existsById(Long id) {
+        return userRepository.existsById(id);
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override

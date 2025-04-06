@@ -1,11 +1,15 @@
 package web_portal_zaposljenje.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Data
 @Entity
 @Table(name="users")
@@ -14,6 +18,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
      private Long id;
+
 
     @Column(name="email", unique = true, nullable = false, length=100)
     private String email;
@@ -36,5 +41,7 @@ public class User {
 
 
     private Set<Role> roles = new HashSet<>();
+
+
 
 }
