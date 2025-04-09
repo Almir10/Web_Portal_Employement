@@ -8,6 +8,7 @@ import web_portal_zaposljenje.model.Oglas;
 import web_portal_zaposljenje.service.IOglasService;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -30,6 +31,13 @@ public class OglasController  {
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOglas);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Oglas> getOglasById(@PathVariable Long id) {
+        Optional<Oglas> oglas = oglasService.findById(id);
+        return oglas.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteOglas(@PathVariable Long id){
         if (oglasService.existsById(id)){
@@ -39,4 +47,32 @@ public class OglasController  {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Oglas> updateOglas(
+            @PathVariable Long id,
+            @RequestBody Oglas oglasDetails,
+            @RequestParam Set<Long> vjestinaIds) {
+
+        try {
+            Oglas updated = oglasService.updateOglas(id, oglasDetails, vjestinaIds);
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
+
+    @GetMapping("/search")
+    public ResponseEntity<List<Oglas>> searchOglasi(
+            @RequestParam(required = false) String pozicija,
+            @RequestParam(required = false) String lokacija,
+            @RequestParam(required = false) String tip,
+            @RequestParam(required = false) Double plata,
+            @RequestParam(required = false) Long vjestinaId) {
+        List<Oglas> oglasi = oglasService.advancedSearch(pozicija, lokacija, tip, plata, vjestinaId);
+        return ResponseEntity.ok(oglasi);
+    }
+
 }

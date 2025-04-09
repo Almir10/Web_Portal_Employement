@@ -18,4 +18,9 @@ public interface IOglasService {
 
     boolean existsById(Long id);
 
+    Optional<Oglas> findById(Long id);
+
+    Oglas updateOglas(Long id, Oglas updatedOglas, Set<Long> vjestinaIds);
+
+
 }
