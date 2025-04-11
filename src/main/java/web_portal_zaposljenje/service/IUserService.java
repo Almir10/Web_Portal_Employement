@@ -16,4 +16,6 @@ public interface IUserService {
     boolean existsById(Long id);
     void deleteById(Long id);
     Optional<User> findByEmail(String email);
+
+    boolean existsByEmail(String email);
 }
