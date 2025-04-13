@@ -12,33 +12,33 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/job-posting")
+@RequestMapping("job-posting")
 public class OglasController  {
 
     @Autowired
     private IOglasService oglasService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<Oglas>> getAllOglasi(){
         List<Oglas> oglasi = oglasService.findAllOglasi();
         return ResponseEntity.ok(oglasi);
     }
 
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Oglas> saveOglas(@RequestBody Oglas oglas, @RequestParam Set<Long> vjestinaIds){
         Oglas savedOglas = oglasService.save(oglas, vjestinaIds);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOglas);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Oglas> getOglasById(@PathVariable Long id) {
         Optional<Oglas> oglas = oglasService.findById(id);
         return oglas.map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteOglas(@PathVariable Long id){
         if (oglasService.existsById(id)){
             oglasService.deleteById(id);
@@ -48,7 +48,7 @@ public class OglasController  {
         }
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<Oglas> updateOglas(
             @PathVariable Long id,
             @RequestBody Oglas oglasDetails,
@@ -64,7 +64,7 @@ public class OglasController  {
 
 
 
-    @GetMapping("/search")
+    @GetMapping("search")
     public ResponseEntity<List<Oglas>> searchOglasi(
             @RequestParam(required = false) String pozicija,
             @RequestParam(required = false) String lokacija,

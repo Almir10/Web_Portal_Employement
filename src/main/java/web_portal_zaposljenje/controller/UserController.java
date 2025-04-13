@@ -11,21 +11,21 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("users")
 public class UserController {
 
     @Autowired
     private IUserService userService;
 
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<User> createUser(@RequestBody User user, @RequestParam List<Long> roleIds) {
         User savedUser = userService.saveUser(user, roleIds);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
 
 
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         Optional<User> user = userService.findById(id);
         return user.map(ResponseEntity::ok)
@@ -33,14 +33,14 @@ public class UserController {
     }
 
 
-    @GetMapping("/")
+    @GetMapping()
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
 
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails, @RequestParam List<Long> roleIds) {
         Optional<User> optionalUser = userService.findById(id);
         if (optionalUser.isPresent()) {

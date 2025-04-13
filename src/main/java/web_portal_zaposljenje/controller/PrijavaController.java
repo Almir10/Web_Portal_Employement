@@ -17,14 +17,14 @@ public class PrijavaController {
     private IPrijavaService prijavaService;
 
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<Prijava> createPrijava(@RequestParam Long developerId, @RequestParam Long oglasId) {
         Prijava novaPrijava = prijavaService.savePrijava(developerId, oglasId);
         return ResponseEntity.status(HttpStatus.CREATED).body(novaPrijava);
     }
 
 
-    @GetMapping("/developer/{developerId}")
+    @GetMapping("developer/{developerId}")
     public ResponseEntity<List<Prijava>> getPrijavaZaDeveloper(@PathVariable Long developerId) {
         List<Prijava> prijave = prijavaService.findByDeveloperId(developerId);
         if (prijave.isEmpty()) {
@@ -34,7 +34,7 @@ public class PrijavaController {
     }
 
 
-    @GetMapping("/job-posting/{oglasId}")
+    @GetMapping("job-posting/{oglasId}")
     public ResponseEntity<List<Prijava>> getPrijaveZaOglas(@PathVariable Long oglasId) {
         List<Prijava> prijave = prijavaService.findByOglasId(oglasId);
         if (prijave.isEmpty()) {
@@ -44,13 +44,13 @@ public class PrijavaController {
     }
 
 
-    @PutMapping("/{prijavaId}")
+    @PutMapping("{prijavaId}")
     public ResponseEntity<Prijava> updateStatusPrijave(@PathVariable Long prijavaId, @RequestParam String noviStatus) {
         Prijava azuriranaPrijava = prijavaService.updatePrijavaStatus(prijavaId, noviStatus);
         return ResponseEntity.ok(azuriranaPrijava);
     }
 
-    @DeleteMapping("/{prijavaId}")
+    @DeleteMapping("{prijavaId}")
     public ResponseEntity<Void> deletePrijava(@PathVariable Long prijavaId) {
         prijavaService.deleteById(prijavaId);
         return ResponseEntity.noContent().build();

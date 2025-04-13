@@ -17,13 +17,13 @@ import web_portal_zaposljenje.service.IAuthenticationService;
 import javax.naming.AuthenticationException;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("auth")
 public class AuthenticationController {
 
     @Autowired
     private IAuthenticationService authenticationService;
 
-    @PostMapping("/register")
+    @PostMapping("register")
     public ResponseEntity<String> register(@RequestBody RegistrationRequest request) {
         try {
             authenticationService.register(request);
@@ -33,7 +33,7 @@ public class AuthenticationController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("login")
     public ResponseEntity<String> login(@RequestBody LoginRequest request) throws AuthenticationException {
         authenticationService.authenticate(request);
         return ResponseEntity.ok("Prijava uspješna.");
