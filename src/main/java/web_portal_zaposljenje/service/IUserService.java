@@ -10,7 +10,10 @@ import java.util.Optional;
 
 public interface IUserService {
 
-    User saveUser(User user, List<Long> roleIds);
+    User saveUser(User user);
+
+    User updateUser(Long id, User updatedUser);
+
     Optional<User> findById(Long id);
     List<User> findAll();
     boolean existsById(Long id);

@@ -10,24 +10,22 @@ import web_portal_zaposljenje.service.IOglasService;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-
 @RestController
 @RequestMapping("job-posting")
-public class OglasController  {
+public class OglasController {
 
     @Autowired
     private IOglasService oglasService;
 
-    @GetMapping("")
-    public ResponseEntity<List<Oglas>> getAllOglasi(){
-        List<Oglas> oglasi = oglasService.findAllOglasi();
+    @GetMapping()
+    public ResponseEntity<List<Oglas>> getAllOglasi() {
+        List<Oglas> oglasi = oglasService.findAll();
         return ResponseEntity.ok(oglasi);
     }
 
-
-    @PostMapping("")
-    public ResponseEntity<Oglas> saveOglas(@RequestBody Oglas oglas, @RequestParam Set<Long> vjestinaIds){
-        Oglas savedOglas = oglasService.save(oglas, vjestinaIds);
+    @PostMapping()
+    public ResponseEntity<Oglas> saveOglas(@RequestBody Oglas oglas) {
+        Oglas savedOglas = oglasService.save(oglas);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedOglas);
     }
 
@@ -39,11 +37,11 @@ public class OglasController  {
     }
 
     @DeleteMapping("{id}")
-    public ResponseEntity<Void> deleteOglas(@PathVariable Long id){
-        if (oglasService.existsById(id)){
+    public ResponseEntity<Void> deleteOglas(@PathVariable Long id) {
+        if (oglasService.existsById(id)) {
             oglasService.deleteById(id);
             return ResponseEntity.noContent().build();
-        }else {
+        } else {
             return ResponseEntity.notFound().build();
         }
     }
@@ -51,18 +49,14 @@ public class OglasController  {
     @PutMapping("{id}")
     public ResponseEntity<Oglas> updateOglas(
             @PathVariable Long id,
-            @RequestBody Oglas oglasDetails,
-            @RequestParam Set<Long> vjestinaIds) {
-
+            @RequestBody Oglas oglasDetails) {
         try {
-            Oglas updated = oglasService.updateOglas(id, oglasDetails, vjestinaIds);
+            Oglas updated = oglasService.updateOglas(id, oglasDetails);
             return ResponseEntity.ok(updated);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
-
-
 
     @GetMapping("search")
     public ResponseEntity<List<Oglas>> searchOglasi(
@@ -74,5 +68,4 @@ public class OglasController  {
         List<Oglas> oglasi = oglasService.advancedSearch(pozicija, lokacija, tip, plata, vjestinaId);
         return ResponseEntity.ok(oglasi);
     }
-
 }

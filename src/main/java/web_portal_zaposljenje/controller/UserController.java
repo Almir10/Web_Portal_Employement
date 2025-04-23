@@ -17,13 +17,11 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-
     @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody User user, @RequestParam List<Long> roleIds) {
-        User savedUser = userService.saveUser(user, roleIds);
+    public ResponseEntity<User> createUser(@RequestBody User user) {
+        User savedUser = userService.saveUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
     }
-
 
     @GetMapping("{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
@@ -32,30 +30,21 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-
     @GetMapping()
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
-
     @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails, @RequestParam List<Long> roleIds) {
-        Optional<User> optionalUser = userService.findById(id);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            user.setEmail(userDetails.getEmail());
-            user.setFirstName(userDetails.getFirstName());
-            user.setLastName(userDetails.getLastName());
-            user.setPassword(userDetails.getPassword());
-            User updatedUser = userService.saveUser(user, roleIds);
+    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
+        try {
+            User updatedUser = userService.updateUser(id, userDetails);
             return ResponseEntity.ok(updatedUser);
-        } else {
+        } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
@@ -66,5 +55,4 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

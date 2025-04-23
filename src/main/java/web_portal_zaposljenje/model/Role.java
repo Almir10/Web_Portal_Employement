@@ -18,7 +18,7 @@ public class Role {
     @Column(name="role_name", unique = true, nullable = false, length=100)
     private String roleName;
 
-    @ManyToMany(mappedBy = "roles")  // 'roles' refers to the field in the User class
+    @ManyToMany(mappedBy = "roles")
     private Set<User> users = new HashSet<>();
 
 

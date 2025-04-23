@@ -36,7 +36,7 @@ public class AuthenticationService implements IAuthenticationService {
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
 
-        userService.saveUser(user, request.getRoleIds());
+        userService.saveUser(user);
     }
 
     @Override

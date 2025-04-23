@@ -8,11 +8,11 @@ import java.util.Set;
 
 public interface IOglasService {
 
-    Oglas save(Oglas oglas, Set<Long> vjestinaIds);
+    Oglas save(Oglas oglas);
 
     List<Oglas> advancedSearch(String pozicija, String lokacija, String tip, Double plata, Long vjestinaId);
 
-    List<Oglas> findAllOglasi();
+    List<Oglas> findAll();
 
     void deleteById(Long id);
 
@@ -20,7 +20,7 @@ public interface IOglasService {
 
     Optional<Oglas> findById(Long id);
 
-    Oglas updateOglas(Long id, Oglas updatedOglas, Set<Long> vjestinaIds);
+    Oglas updateOglas(Long id, Oglas updatedOglas);
 
 
 }
