@@ -8,8 +8,7 @@ import lombok.Setter;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
+
 @Data
 @Entity
 @Table(name="Oglas")
@@ -47,4 +46,67 @@ public class Oglas {
     private Set<Vjestina> vjestine = new HashSet<>();
 
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setPoslodavac(User poslodavac) {
+        this.poslodavac = poslodavac;
+    }
+
+    public void setPozicija(String pozicija) {
+        this.pozicija = pozicija;
+    }
+
+    public void setTip(String tip) {
+        this.tip = tip;
+    }
+
+    public void setLokacija(String lokacija) {
+        this.lokacija = lokacija;
+    }
+
+    public void setOpis(String opis) {
+        this.opis = opis;
+    }
+
+    public void setPlata(double plata) {
+        this.plata = plata;
+    }
+
+    public void setVjestine(Set<Vjestina> vjestine) {
+        this.vjestine = vjestine;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getPoslodavac() {
+        return poslodavac;
+    }
+
+    public String getPozicija() {
+        return pozicija;
+    }
+
+    public String getTip() {
+        return tip;
+    }
+
+    public String getLokacija() {
+        return lokacija;
+    }
+
+    public String getOpis() {
+        return opis;
+    }
+
+    public double getPlata() {
+        return plata;
+    }
+
+    public Set<Vjestina> getVjestine() {
+        return vjestine;
+    }
 }

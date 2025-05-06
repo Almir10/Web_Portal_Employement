@@ -21,4 +21,27 @@ public class Vjestina {
     @ManyToMany(mappedBy = "vjestine")
     private Set<Oglas> oglasi = new HashSet<>();
 
+    public Long getId() {
+        return Id;
+    }
+
+    public void setId(Long id) {
+        Id = id;
+    }
+
+    public String getNaziv() {
+        return naziv;
+    }
+
+    public void setNaziv(String naziv) {
+        this.naziv = naziv;
+    }
+
+    public Set<Oglas> getOglasi() {
+        return oglasi;
+    }
+
+    public void setOglasi(Set<Oglas> oglasi) {
+        this.oglasi = oglasi;
+    }
 }

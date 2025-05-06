@@ -22,4 +22,15 @@ public class Role {
     private Set<User> users = new HashSet<>();
 
 
+    public Long getId() {
+        return id;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public Set<User> getUsers() {
+        return users;
+    }
 }

@@ -4,14 +4,16 @@
   <title>Welcome</title>
 </head>
 <body>
-<!-- Replace the 'content' fragment in layout -->
-<div th:replace="layout :: content">
-  <h1 class="text-center">Welcome to the Job Portal</h1>
-  <p class="text-center">Find your dream job or hire the perfect candidate!</p>
-  <div class="text-center mt-4">
-    <a class="btn btn-primary" href="/job-posting">View Job Listings</a>
-    <a class="btn btn-secondary" href="/auth/register">Register</a>
-    <a class="btn btn-outline-secondary" href="/auth/login">Login</a>
+<!-- Use the parent layout and provide custom content -->
+<div th:replace="layout :: layout(~{::content})">
+  <div th:fragment="content">
+    <h1 class="text-center">Welcome to the Job Portal</h1>
+    <p class="text-center">Find your dream job or hire the perfect candidate!</p>
+    <div class="text-center mt-4">
+      <a class="btn btn-primary" href="/job-posting">View Job Listings</a>
+      <a class="btn btn-secondary" href="/auth/register">Register</a>
+      <a class="btn btn-outline-secondary" href="/auth/login">Login</a>
+    </div>
   </div>
 </div>
 </body>
