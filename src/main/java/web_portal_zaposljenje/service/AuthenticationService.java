@@ -44,6 +44,11 @@ public class AuthenticationService implements IAuthenticationService {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
                 request.getEmail(), request.getPassword());
         Authentication authenticated = authenticationManager.authenticate(authentication);
+
+        System.out.println("Authenticated User: " + authenticated.getPrincipal());
+
         SecurityContextHolder.getContext().setAuthentication(authenticated);
+
+        System.out.println("SecurityContext: " + SecurityContextHolder.getContext().getAuthentication());
     }
 }

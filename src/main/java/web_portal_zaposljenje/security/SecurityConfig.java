@@ -8,6 +8,7 @@ import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -45,16 +46,22 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("*","/*", "/login", "/register", "/job-posting/*","/job-posting", "job-posting").permitAll()
+                        .requestMatchers("*","/*", "/auth/*", "/auth/login", "/job-posting/*","/job-posting", "job-posting").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form
-                        .loginPage("/auth/login")
-                        .permitAll()
-                )
-                .logout(logout -> logout.permitAll());
+                .formLogin(form -> form.disable())
+                .logout(logout -> logout
+                        .logoutUrl("/auth/logout")       // Specify the logout URL
+                        .logoutSuccessUrl("/")           // Redirect to homepage after logout
+                        .invalidateHttpSession(true)     // Invalidate the session
+                        .clearAuthentication(true)       // Clear the SecurityContext
+                        .deleteCookies("JSESSIONID")     // Delete the session cookie
+                        .permitAll()                     // Allow all users to access the logout endpoint
+                ).sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED) // Enable session-based authentication
+        );
 
         return http.build();
     }
