@@ -14,10 +14,24 @@
         <h1>Register</h1>
         <p>Create an account to get started.</p>
 
-        <form action="/auth/register" method="POST">
+        <!-- Error Message -->
+        <div class="alert alert-danger" role="alert" style="display: none;" id="error-message">
+            Something went wrong. Please try again.
+        </div>
+
+        <!-- Success Message -->
+        <div class="alert alert-success" role="alert" style="display: none;" id="success-message">
+            Registration successful! Redirecting to your dashboard...
+        </div>
+
+        <form id="registration-form">
             <div class="form-group">
-                <label for="name">Full Name</label>
-                <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                <label for="firstName">First Name</label>
+                <input type="text" id="firstName" name="firstName" placeholder="Enter your first name" required>
+            </div>
+            <div class="form-group">
+                <label for="lastName">Last Name</label>
+                <input type="text" id="lastName" name="lastName" placeholder="Enter your last name" required>
             </div>
             <div class="form-group">
                 <label for="email">Email Address</label>
@@ -28,8 +42,8 @@
                 <input type="password" id="password" name="password" placeholder="Create a password" required>
             </div>
             <div class="form-group">
-                <label for="confirm-password">Confirm Password</label>
-                <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirm your password" required>
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
             </div>
             <button type="submit" class="btn-primary">Register</button>
         </form>
@@ -41,5 +55,51 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+<script>
+    document.getElementById("registration-form").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Prevent the default form submission behavior
+
+        // Gather form data
+        const formData = {
+            email: document.getElementById("email").value,
+            password: document.getElementById("password").value,
+            firstName: document.getElementById("firstName").value,
+            lastName: document.getElementById("lastName").value
+        };
+
+        // Basic client-side validation
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        if (formData.password !== confirmPassword) {
+            document.getElementById("error-message").style.display = "block";
+            document.getElementById("error-message").textContent = "Passwords do not match.";
+            return;
+        }
+
+        try {
+
+            const response = await fetch("/auth/register", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (response.ok) {
+                document.getElementById("success-message").style.display = "block";
+                document.getElementById("success-message").textContent = "Registration successful! Redirecting...";
+                window.location.href = "/login";
+            } else {
+                const error = await response.json();
+                document.getElementById("error-message").style.display = "block";
+                document.getElementById("error-message").textContent = error.message || "Something went wrong.";
+            }
+        } catch (error) {
+            console.error("Error during registration:", error);
+            document.getElementById("error-message").style.display = "block";
+            document.getElementById("error-message").textContent = "An unexpected error occurred. Please try again.";
+        }
+    });
+</script>
 </body>
 </html>

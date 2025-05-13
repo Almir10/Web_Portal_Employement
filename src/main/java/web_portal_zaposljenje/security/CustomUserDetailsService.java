@@ -22,7 +22,10 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (userOptional.isEmpty()) {
             throw new UsernameNotFoundException("Korisnik sa emailom: " + email + " nije pronađen.");
         }
+
         User user = userOptional.get();
+
+        System.out.println("Loaded password from DB: " + user.getPassword());
         return new CustomUserDetails(user);
     }
 

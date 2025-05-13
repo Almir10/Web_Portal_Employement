@@ -51,7 +51,13 @@ public class SecurityConfig {
                         .requestMatchers("/user/**").hasRole("USER")
                         .anyRequest().authenticated()
                 )
-                .formLogin(form -> form.disable())
+                .formLogin(form -> form
+                        .loginPage("/login") // Custom login page at /login
+                        .loginProcessingUrl("/auth/login") // URL to submit the login form
+                        .defaultSuccessUrl("/", true) // Redirect to home on successful login
+                        .failureUrl("/login?error=true") // Redirect to login page on failure
+                        .permitAll()
+                )
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout")       // Specify the logout URL
                         .logoutSuccessUrl("/")           // Redirect to homepage after logout

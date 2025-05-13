@@ -26,6 +26,7 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void register(RegistrationRequest request) {
+
         if (userService.existsByEmail(request.getEmail())) {
             throw new IllegalArgumentException("Email već postoji.");
         }
@@ -35,10 +36,11 @@ public class AuthenticationService implements IAuthenticationService {
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-
         userService.saveUser(user);
-    }
 
+        System.out.println("Successfully registered user: " + user.getEmail());
+
+    }
     @Override
     public void authenticate(LoginRequest request) {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
