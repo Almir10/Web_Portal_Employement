@@ -8,11 +8,13 @@ import java.util.Set;
 
 public interface IOglasService {
 
-    Oglas save(Oglas oglas);
+    Oglas save(Oglas oglas, List<Long> vjestinaIds);
 
     List<Oglas> advancedSearch(String pozicija, String lokacija, String tip, Double plata, Long vjestinaId);
 
     List<Oglas> findAll();
+
+    List<Oglas> findByPoslodavacId(Long poslodavacId);
 
     void deleteById(Long id);
 

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Poslodavac Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+</head>
+<link rel="stylesheet" href="/styles.css"> <!-- Include your global styles -->
+<style>
+    /* Centralizovana kartica */
+    .dashboard-card {
+        max-width: 800px;
+        margin: 3rem auto;
+        padding: 2rem;
+        background-color: #ffffff;
+        border-radius: 10px;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+    }
+
+    /* Stil za naslov kartice */
+    .dashboard-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #2557a7;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+    /* Tabovi */
+    .nav-tabs .nav-link {
+        color: #2557a7;
+        font-weight: 600;
+    }
+
+    .nav-tabs .nav-link.active {
+        background-color: #2557a7;
+        color: #ffffff;
+        border: none;
+    }
+
+    .tab-content {
+        margin-top: 1.5rem;
+    }
+</style>
+</head>
+<body class="bg-light">
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand text-primary" href="#">Dashboard</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="#">Dobrodošli, <span th:text="${userName}"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="/logout">Odjava</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Dashboard kartica -->
+<div class="dashboard-card">
+    <h1 class="dashboard-title">Poslodavac Dashboard</h1>
+    <!-- Tabovi -->
+    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="oglasi-tab" data-bs-toggle="tab" data-bs-target="#oglasi" type="button" role="tab" aria-controls="oglasi" aria-selected="true">Lista Oglasa</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="dodaj-oglas-tab" data-bs-toggle="tab" data-bs-target="#dodaj-oglas" type="button" role="tab" aria-controls="dodaj-oglas" aria-selected="false">Dodaj Oglas</button>
+        </li>
+    </ul>
+
+    <!-- Sadržaj tabova -->
+    <div class="tab-content" id="dashboardTabsContent">
+        <!-- Tab za listu oglasa -->
+        <div class="tab-pane fade show active" id="oglasi" role="tabpanel" aria-labelledby="oglasi-tab">
+            <h3>Vaši oglasi</h3>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>Pozicija</th>
+                    <th>Lokacija</th>
+                    <th>Tip</th>
+                    <th>Plata</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="oglas : ${oglasi}">
+                    <td th:text="${oglas.pozicija}"></td>
+                    <td th:text="${oglas.lokacija}"></td>
+                    <td th:text="${oglas.tip}"></td>
+                    <td th:text="${oglas.plata}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Tab za dodavanje oglasa -->
+        <div class="tab-pane fade" id="dodaj-oglas" role="tabpanel" aria-labelledby="dodaj-oglas-tab">
+            <h3>Dodaj Novi Oglas</h3>
+            <form action="/poslodavac/oglas" method="post">
+                <div class="mb-3">
+                    <label for="pozicija" class="form-label">Pozicija</label>
+                    <input type="text" class="form-control" id="pozicija" name="pozicija" required>
+                </div>
+                <div class="mb-3">
+                    <label for="tip" class="form-label">Tip</label>
+                    <input type="text" class="form-control" id="tip" name="tip" required>
+                </div>
+                <div class="mb-3">
+                    <label for="lokacija" class="form-label">Lokacija</label>
+                    <input type="text" class="form-control" id="lokacija" name="lokacija" required>
+                </div>
+                <div class="mb-3">
+                    <label for="opis" class="form-label">Opis</label>
+                    <textarea class="form-control" id="opis" name="opis" rows="4" required></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="plata" class="form-label">Plata</label>
+                    <input type="number" class="form-control" id="plata" name="plata" required>
+                </div>
+                <div class="mb-3">
+                    <label for="vjestine" class="form-label">Vještine</label>
+                    <select multiple class="form-control" id="vjestine" name="vjestine">
+                        <option th:each="vjestina : ${vjestine}" th:value="${vjestina.id}" th:text="${vjestina.naziv}"></option>
+                    </select>
+                    <small class="form-text text-muted">Držite CTRL (ili CMD na Mac-u) za izbor više vještina.</small>
+                </div>
+                <button type="submit" class="btn btn-primary">Dodaj</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+</body>
+</html>

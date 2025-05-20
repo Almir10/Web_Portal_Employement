@@ -46,9 +46,15 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("*","/*", "/auth/*", "/auth/login", "/job-posting/*","/job-posting", "job-posting").permitAll()
+                        .requestMatchers("/css/**", "/js/**", "/images/**", "/webjars/**", "/styles.css").permitAll()
+
+
+
+                        .requestMatchers( "/auth/*", "/auth/login", "/job-posting/*","/job-posting", "job-posting").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/user/**").hasRole("USER")
+                        .requestMatchers("/developerDashboard").hasRole("DEVELOPER")
+                        .requestMatchers("/poslodavacDashboard").hasRole("POSLODAVAC")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form

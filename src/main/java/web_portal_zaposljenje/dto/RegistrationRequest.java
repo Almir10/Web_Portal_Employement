@@ -46,7 +46,7 @@ public class RegistrationRequest {
     }
 
     public List<Long> getRoleIds() {
-        return roleIds;
+        return this.roleIds;
     }
 
     public void setRoleIds(List<Long> roleIds) {

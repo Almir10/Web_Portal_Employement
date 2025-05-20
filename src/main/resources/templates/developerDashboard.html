@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+        body {
+            background: #f5f8fa;
+        }
+        .navbar {
+            background-color: #2166f3;
+        }
+        .navbar-brand, .nav-link, .dropdown-item {
+            color: #fff !important;
+        }
+        .dashboard-card {
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(33,102,243,0.07);
+            border: none;
+        }
+        .card-header {
+            background: #2166f3;
+            color: #fff;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+        .btn-primary {
+            background-color: #2166f3;
+            border-color: #2166f3;
+        }
+        .btn-primary:hover {
+            background-color: #1852c1;
+            border-color: #1852c1;
+        }
+        .status-badge {
+            font-size: 0.9em;
+            padding: 0.4em 0.8em;
+            border-radius: 12px;
+        }
+    </style>
+
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Zapošljavanje Portal</a>
+        <div>
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" href="#" th:href="@{/poslodavacDashboard}">Dashboard</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/job-posting/new}">Nova Oglas</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" th:href="@{/logout}">Odjava</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container py-4">
+    <h2 class="mb-4 text-primary">Moji Oglasi za Posao</h2>
+    <div class="mb-3">
+        <a class="btn btn-primary" th:href="@{/job-posting/new}">+ Dodaj Novi Oglas</a>
+    </div>
+    <!-- Job Postings Table -->
+    <div class="card dashboard-card mb-4">
+        <div class="card-header">
+            <h5 class="mb-0">Aktivni Oglasi</h5>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Pozicija</th>
+                        <th>Lokacija</th>
+                        <th>Tip</th>
+                        <th>Datum</th>
+                        <th>Prijave</th>
+                        <th>Status</th>
+                        <th>Akcije</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Loop over job postings -->
+                    <tr th:each="oglas : ${oglasi}">
+                        <td th:text="${oglas.pozicija}">Backend Developer</td>
+                        <td th:text="${oglas.lokacija}">Sarajevo</td>
+                        <td th:text="${oglas.tip}">Full-time</td>
+                        <td th:text="${#dates.format(oglas.datum, 'dd.MM.yyyy.')}">16.05.2025.</td>
+                        <td>
+                            <a th:href="@{'/prijave/' + ${oglas.id}}" class="btn btn-link p-0" th:text="${oglas.prijaveCount}">3</a>
+                        </td>
+                        <td>
+                                <span th:classappend="${oglas.aktivan} ? 'bg-success' : 'bg-secondary'"
+                                      class="status-badge badge"
+                                      th:text="${oglas.aktivan} ? 'Aktivan' : 'Zatvoren'">Aktivan</span>
+                        </td>
+                        <td>
+                            <a th:href="@{'/job-posting/edit/' + ${oglas.id}}" class="btn btn-sm btn-outline-primary">Uredi</a>
+                            <a th:href="@{'/job-posting/delete/' + ${oglas.id}}" class="btn btn-sm btn-outline-danger ms-1">Izbriši</a>
+                        </td>
+                    </tr>
+                    <!-- If no postings -->
+                    <tr th:if="${#lists.isEmpty(oglasi)}">
+                        <td colspan="7" class="text-center py-4 text-muted">Nemate aktivnih oglasa.</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- Candidates/Applications Section (when a job is selected) -->
+    <div th:if="${prijave != null}">
+        <div class="card dashboard-card">
+            <div class="card-header">
+                <h5 class="mb-0">Prijave za: <span th:text="${oglasSelected.pozicija}">Backend Developer</span></h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="table-light">
+                        <tr>
+                            <th>Kandidat</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Datum Prijave</th>
+                            <th>Akcije</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="prijava : ${prijave}">
+                            <td>
+                                <a th:href="@{'/developer/' + ${prijava.kandidat.id}}" th:text="${prijava.kandidat.ime} + ' ' + ${prijava.kandidat.prezime}">Ime Prezime</a>
+                            </td>
+                            <td th:text="${prijava.kandidat.email}">email@example.com</td>
+                            <td>
+                                    <span th:classappend="'status-badge badge ' +
+                                         (${prijava.status} == 'PRIMLJEN' ? 'bg-success' :
+                                         (${prijava.status} == 'ODBIJEN' ? 'bg-danger' :
+                                         (${prijava.status} == 'U TOKU' ? 'bg-warning text-dark' : 'bg-secondary')))"
+                                          th:text="${prijava.status}">U TOKU</span>
+                            </td>
+                            <td th:text="${#dates.format(prijava.datumPrijave, 'dd.MM.yyyy.')}">16.05.2025.</td>
+                            <td>
+                                <a th:href="@{'/prijava/' + ${prijava.id} + '/shortlist'}" class="btn btn-sm btn-outline-success">Shortlist</a>
+                                <a th:href="@{'/prijava/' + ${prijava.id} + '/reject'}" class="btn btn-sm btn-outline-danger">Odbij</a>
+                                <a th:href="@{'/prijava/' + ${prijava.id} + '/hire'}" class="btn btn-sm btn-outline-primary">Zaposli</a>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(prijave)}">
+                            <td colspan="5" class="text-center py-4 text-muted">Nema prijava za ovaj oglas.</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+</html>

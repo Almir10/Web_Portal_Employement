@@ -17,11 +17,11 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @PostMapping("")
+   /* @PostMapping("")
     public ResponseEntity<User> createUser(@RequestBody User user) {
         User savedUser = userService.saveUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-    }
+    }*/
 
     @GetMapping("{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {

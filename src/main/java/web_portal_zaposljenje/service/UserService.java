@@ -27,17 +27,12 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(User user, List<Long> roleIds) {
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 
-        Set<Long> roleIds = user.getRoles()
-                .stream()
-                .map(Role::getId)
-                .collect(Collectors.toSet());
-
-
+        // Fetch roles from the database using the provided role IDs
         Set<Role> roles = roleIds.stream()
                 .map(id -> roleRepository.findById(id)
                         .orElseThrow(() -> new RuntimeException("Role with ID " + id + " not found")))

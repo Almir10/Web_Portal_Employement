@@ -22,6 +22,11 @@
       <a th:if="${userName == null}" href="/login" class="navbar-link">Login</a>
       <a th:if="${userName == null}" href="/register" class="navbar-link sign-in">Register</a>
       <span th:if="${userName != null}" class="navbar-link">Welcome, <span th:text="${userName}"></span></span>
+
+
+      <a th:if="${isDeveloper}" href="/developerDashboard" class="navbar-link">Developer Dashboard</a>
+      <a th:if="${isPoslodavac}" href="/poslodavacDashboard" class="navbar-link">Poslodavac Dashboard</a>
+
       <form th:if="${userName != null}" action="/auth/logout" method="POST" style="display: inline;">
         <button class="navbar-link btn btn-link" type="submit">Logout</button>
       </form>
@@ -64,5 +69,6 @@
   </div>
 </footer>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
 </body>
 </html>

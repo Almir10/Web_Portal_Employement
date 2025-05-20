@@ -36,7 +36,7 @@ public class AuthenticationService implements IAuthenticationService {
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
         user.setLastName(request.getLastName());
-        userService.saveUser(user);
+        userService.saveUser(user, request.getRoleIds());
 
         System.out.println("Successfully registered user: " + user.getEmail());
 

@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public interface IUserService {
 
-    User saveUser(User user);
+    User saveUser(User user, List<Long> roleIds);
 
     User updateUser(Long id, User updatedUser);
 

@@ -45,6 +45,16 @@
                 <label for="confirmPassword">Confirm Password</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
             </div>
+
+            <!-- Role Selection -->
+            <div class="form-group">
+                <label for="roles">Select Role(s)</label>
+                <select id="roles" name="roleIds" multiple required>
+                    <option value="2">Developer</option>
+                    <option value="3">Poslodavac</option>
+                </select>
+            </div>
+
             <button type="submit" class="btn-primary">Register</button>
         </form>
 
@@ -64,7 +74,8 @@
             email: document.getElementById("email").value,
             password: document.getElementById("password").value,
             firstName: document.getElementById("firstName").value,
-            lastName: document.getElementById("lastName").value
+            lastName: document.getElementById("lastName").value,
+            roleIds: Array.from(document.getElementById("roles").selectedOptions).map(option => parseInt(option.value))
         };
 
         // Basic client-side validation
@@ -76,7 +87,6 @@
         }
 
         try {
-
             const response = await fetch("/auth/register", {
                 method: "POST",
                 headers: {

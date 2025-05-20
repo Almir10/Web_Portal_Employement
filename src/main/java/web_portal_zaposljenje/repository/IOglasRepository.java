@@ -28,6 +28,8 @@ public interface IOglasRepository extends JpaRepository<Oglas, Long> {
             @Param("vjestinaId") Long vjestinaId // id vještine, može biti null ako nije odabrana
     );
 
+
+    List<Oglas> findByPoslodavac_Id(Long poslodavacId);
 }
 
 

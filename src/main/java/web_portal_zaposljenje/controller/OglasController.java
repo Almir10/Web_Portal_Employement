@@ -23,11 +23,7 @@ public class OglasController {
         return ResponseEntity.ok(oglasi);
     }
 
-    @PostMapping()
-    public ResponseEntity<Oglas> saveOglas(@RequestBody Oglas oglas) {
-        Oglas savedOglas = oglasService.save(oglas);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedOglas);
-    }
+
 
     @GetMapping("{id}")
     public ResponseEntity<Oglas> getOglasById(@PathVariable Long id) {

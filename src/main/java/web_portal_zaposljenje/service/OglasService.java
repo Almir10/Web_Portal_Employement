@@ -23,23 +23,16 @@ public class OglasService implements IOglasService{
     private IVjestinaRepository vjestinaRepository;
 
     @Override
-    public Oglas save(Oglas oglas) {
-        // Use the vjestinaIds from the Oglas object itself
-        Set<Long> vjestinaIds = oglas.getVjestine()
-                .stream()
-                .map(Vjestina::getId)
-                .collect(Collectors.toSet());
-
-        // Fetch the Vjestina objects from the database
-        Set<Vjestina> vjestine = vjestinaIds.stream()
-                .map(id -> vjestinaRepository.findById(id)
-                        .orElseThrow(() -> new RuntimeException("Vještina sa ID-em " + id + " nije pronađena.")))
-                .collect(Collectors.toSet());
-
-        // Set the Vjestine back to the Oglas object
-        oglas.setVjestine(vjestine);
-
-        // Save the Oglas object
+    public Oglas save(Oglas oglas, List<Long> vjestinaIds) {
+        if (vjestinaIds != null && !vjestinaIds.isEmpty()) {
+            Set<Vjestina> vjestine = vjestinaIds.stream()
+                    .map(id -> vjestinaRepository.findById(id)
+                            .orElseThrow(() -> new RuntimeException("Vještina sa ID-em " + id + " nije pronađena.")))
+                    .collect(Collectors.toSet());
+            oglas.setVjestine(vjestine);
+        } else {
+            oglas.setVjestine(new HashSet<>());
+        }
         return oglasRepository.save(oglas);
     }
 
@@ -50,6 +43,11 @@ public class OglasService implements IOglasService{
     @Override
     public List<Oglas> findAll(){
         return oglasRepository.findAll();
+    }
+
+    @Override
+    public List<Oglas> findByPoslodavacId(Long poslodavacId) {
+        return oglasRepository.findByPoslodavac_Id(poslodavacId);
     }
 
     @Override

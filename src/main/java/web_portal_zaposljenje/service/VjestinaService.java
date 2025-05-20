@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import web_portal_zaposljenje.model.Vjestina;
 import web_portal_zaposljenje.repository.IVjestinaRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,5 +18,10 @@ public class VjestinaService implements IVjestinaService{
     @Override
     public Optional<Vjestina> findByNazivContaining(String naziv) {
         return vjestinaRepository.findByNazivContaining(naziv);
+    }
+
+    @Override
+    public List<Vjestina> findAll(){
+        return vjestinaRepository.findAll();
     }
 }
