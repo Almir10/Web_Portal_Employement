@@ -94,5 +94,22 @@ public class OglasService implements IOglasService{
         return oglasRepository.save(existingOglas);
     }
 
+    @Override
+    public List<Oglas> findSlicniOglasi(Oglas oglas, int maxResults) {
+        List<Oglas> sviOglasi = oglasRepository.findAll();
+        String[] rijeci = oglas.getPozicija().split("\\s+");
+        List<Oglas> slicni = sviOglasi.stream()
+                .filter(o -> !o.getId().equals(oglas.getId()))
+                .filter(o -> {
+                    for(String r : rijeci) {
+                        if(o.getPozicija().toLowerCase().contains(r.toLowerCase())) return true;
+                    }
+                    return false;
+                })
+                .limit(maxResults)
+                .collect(Collectors.toList());
+        return slicni;
+    }
+
 
 }

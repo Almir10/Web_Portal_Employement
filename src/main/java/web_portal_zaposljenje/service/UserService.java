@@ -32,7 +32,7 @@ public class UserService implements IUserService {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
 
-        // Fetch roles from the database using the provided role IDs
+
         Set<Role> roles = roleIds.stream()
                 .map(id -> roleRepository.findById(id)
                         .orElseThrow(() -> new RuntimeException("Role with ID " + id + " not found")))

@@ -25,4 +25,5 @@ public interface IOglasService {
     Oglas updateOglas(Long id, Oglas updatedOglas);
 
 
+    List<Oglas> findSlicniOglasi(Oglas oglas, int maxResults);
 }

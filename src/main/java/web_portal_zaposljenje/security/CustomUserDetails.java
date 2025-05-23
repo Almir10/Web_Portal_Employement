@@ -1,5 +1,6 @@
 package web_portal_zaposljenje.security;
 
+import jakarta.websocket.OnError;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -33,10 +34,12 @@ public class CustomUserDetails implements UserDetails {
         return password;
     }
 
+
     @Override
     public String getUsername() {
         return email;
     }
+
 
     @Override
     public boolean isAccountNonExpired() {

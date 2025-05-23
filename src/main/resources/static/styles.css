@@ -1,3 +1,17 @@
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+main.container {
+    flex: 1 0 auto;
+}
+
 .navbar-container {
     display: flex;
     justify-content: space-between;
@@ -113,12 +127,11 @@
 }
 
 .footer {
-    background-color: #2557a7; /* Tamnoplava boja za pozadinu */
-    color: #ffffff; /* Bijela boja za tekst */
+    background-color: #2557a7;
+    color: #ffffff;
     padding: 2rem 0;
-    border-top: 3px solid #2557a7; /* Svjetlija plava linija iznad footera */
-    position: relative;
-    bottom: 0;
+    border-top: 3px solid #2557a7;
+    flex-shrink: 0;
     width: 100%;
 }
 

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import web_portal_zaposljenje.model.Prijava;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IPrijavaRepository extends JpaRepository<Prijava, Long> {
 
@@ -13,6 +14,6 @@ public interface IPrijavaRepository extends JpaRepository<Prijava, Long> {
 
     List<Prijava> findByDeveloperId(Long developerId);
 
-    List<Prijava> findByOglasIdAndDeveloperId(Long oglasId, Long developerId);
+    Optional<Prijava> findByOglasIdAndDeveloperEmail(Long oglasId, String email);
 
 }

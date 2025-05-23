@@ -32,6 +32,15 @@ public class User {
     @Column(name="last_name", nullable = false, length = 30)
     private String lastName;
 
+    @Column(name="github_link")
+    private String githubLink;
+
+    @Column(name="linkedin_link")
+    private String linkedinLink;
+
+    @Column(name="summary", length = 500)
+    private String summary;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "role_user",

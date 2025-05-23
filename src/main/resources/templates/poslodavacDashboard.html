@@ -72,6 +72,9 @@
         <li class="nav-item" role="presentation">
             <button class="nav-link" id="dodaj-oglas-tab" data-bs-toggle="tab" data-bs-target="#dodaj-oglas" type="button" role="tab" aria-controls="dodaj-oglas" aria-selected="false">Dodaj Oglas</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="prijave-tab" data-bs-toggle="tab" data-bs-target="#prijave" type="button" role="tab" aria-controls="prijave" aria-selected="false">Prijave</button>
+        </li>
     </ul>
 
     <!-- Sadržaj tabova -->
@@ -86,6 +89,8 @@
                     <th>Lokacija</th>
                     <th>Tip</th>
                     <th>Plata</th>
+                    <th>Akcije</th>
+
                 </tr>
                 </thead>
                 <tbody>
@@ -94,6 +99,9 @@
                     <td th:text="${oglas.lokacija}"></td>
                     <td th:text="${oglas.tip}"></td>
                     <td th:text="${oglas.plata}"></td>
+                    <td>
+                        <a th:href="@{'/poslodavac/oglasi/' + ${oglas.id} + '/uredi'}" class="btn btn-sm btn-warning">Uredi</a>
+                    </td>
                 </tr>
                 </tbody>
             </table>
@@ -133,8 +141,99 @@
                 <button type="submit" class="btn btn-primary">Dodaj</button>
             </form>
         </div>
+        <div class="tab-pane fade" id="prijave" role="tabpanel" aria-labelledby="prijave-tab">
+            <h3>Prijave na oglase</h3>
+            <div class="mb-3">
+                <label for="oglas-select" class="form-label">Odaberi oglas</label>
+                <select class="form-select" id="oglas-select" onchange="showPrijaveZaOglas(this.value)">
+                    <option value="">-- Odaberi oglas --</option>
+                    <option th:each="oglas : ${oglasi}" th:value="${oglas.id}" th:text="${oglas.pozicija}"></option>
+                </select>
+            </div>
+            <div id="prijave-lista"></div>
+
+            <!-- Modal za detalje developera -->
+            <div class="modal fade" id="developerModal" tabindex="-1" aria-labelledby="developerModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="developerModalLabel">Detalji developera</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+                        </div>
+                        <div class="modal-body" id="developer-modal-body">
+                            <!-- Sadržaj se popunjava iz JS-a -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+
+<script>
+    function showPrijaveZaOglas(oglasId) {
+        if (!oglasId) {
+            document.getElementById('prijave-lista').innerHTML = '';
+            return;
+        }
+        fetch(`/poslodavac/api/oglasi/${oglasId}/prijave`)
+            .then(response => response.json())
+            .then(prijave => {
+                let html = '<table class="table table-sm">';
+                html += '<thead><tr><th>Developer</th><th>Status</th><th>Akcija</th></tr></thead><tbody>';
+                prijave.forEach(prijava => {
+                    html += `<tr>
+                    <td>${prijava.developer.firstName} ${prijava.developer.lastName}</td>
+                    <td>
+                        <form onsubmit="return updateStatus(event, ${prijava.id});">
+                            <select name="newStatus" class="form-select form-select-sm d-inline w-auto">
+                                <option ${prijava.status === 'U procesu' ? 'selected' : ''}>U procesu</option>
+                                <option ${prijava.status === 'Prihvaćen' ? 'selected' : ''}>Prihvaćen</option>
+                                <option ${prijava.status === 'Odbijen' ? 'selected' : ''}>Odbijen</option>
+                            </select>
+                            <button class="btn btn-primary btn-sm">Spremi</button>
+                        </form>
+                    </td>
+                    <td>
+                        <button class="btn btn-info btn-sm" onclick="showDeveloperInfo(${prijava.developer.id})">Detalji</button>
+                    </td>
+                </tr>`;
+                });
+                html += '</tbody></table>';
+                document.getElementById('prijave-lista').innerHTML = html;
+            });
+    }
+
+    function updateStatus(event, prijavaId) {
+        event.preventDefault();
+        const status = event.target.newStatus.value;
+        fetch(`/poslodavac/prijave/${prijavaId}/status`, {
+            method: "POST",
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: `newStatus=${encodeURIComponent(status)}`
+        }).then(() => {
+            alert("Status ažuriran!");
+        });
+        return false;
+    }
+
+    function showDeveloperInfo(developerId) {
+        fetch(`/poslodavac/api/developer/${developerId}`)
+            .then(response => response.json())
+            .then(developer => {
+                document.getElementById('developer-modal-body').innerHTML = `
+                <p><strong>Ime:</strong> ${developer.firstName} ${developer.lastName}</p>
+                <p><strong>Email:</strong> ${developer.email}</p>
+                <p><strong>CV:</strong> <a href="${developer.cvLink || '#'}" target="_blank">Pogledaj CV</a></p>
+                <p><strong>Vještine:</strong> ${(developer.vjestine || []).map(v => v.naziv).join(', ')}</p>
+            `;
+                var myModal = new bootstrap.Modal(document.getElementById('developerModal'));
+                myModal.show();
+            });
+    }
+</script>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
 </body>

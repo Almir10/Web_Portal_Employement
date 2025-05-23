@@ -51,8 +51,20 @@
   </div>
 </section>
 
-<!-- Main Content -->
 <main class="container mt-4">
+  <div class="row" th:if="${oglasi}">
+    <div class="col-md-4 mb-4" th:each="oglas : ${oglasi}">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${oglas.pozicija}"></h5>
+          <h6 class="card-subtitle mb-2 text-muted" th:text="${oglas.lokacija}"></h6>
+          <p class="card-text" th:text="${#strings.abbreviate(oglas.opis, 100)}"></p>
+          <p class="mb-1"><strong>Plata:</strong> <span th:text="${oglas.plata}"></span> KM</p>
+          <a th:href="@{'/oglas/' + ${oglas.id}}" class="btn btn-primary btn-sm">Detalji</a>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </main>
 

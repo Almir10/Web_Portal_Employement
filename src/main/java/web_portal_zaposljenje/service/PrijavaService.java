@@ -11,6 +11,7 @@ import web_portal_zaposljenje.repository.IUserRepository;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PrijavaService implements IPrijavaService {
@@ -46,6 +47,11 @@ public class PrijavaService implements IPrijavaService {
     }
 
     @Override
+    public Optional<Prijava> findById(Long prijavaId){
+        return prijavaRepository.findById(prijavaId);
+    }
+
+    @Override
     public List<Prijava> findByOglasId(Long oglasId) {
         return prijavaRepository.findByOglasId(oglasId);
     }
@@ -64,5 +70,10 @@ public class PrijavaService implements IPrijavaService {
             throw new RuntimeException("Prijava not found");
         }
         prijavaRepository.deleteById(prijavaId);
+    }
+
+    @Override
+    public Optional<Prijava> findByOglasIdAndDeveloperEmail(Long oglasId, String email){
+        return prijavaRepository.findByOglasIdAndDeveloperEmail(oglasId, email);
     }
 }

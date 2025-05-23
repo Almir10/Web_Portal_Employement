@@ -64,14 +64,33 @@ public class PoslodavacController {
         User poslodavac = userService.findByEmail(authentication.getName()).orElseThrow();
         oglas.setPoslodavac(poslodavac);
         oglasService.save(oglas, vjestinaIds);  // PROSLEDJUJEŠ OBJEKAT + ID-ove
-        return "poslodavacDashboard";
+        return "redirect:/poslodavac/dashboard";
+    }
+
+    @GetMapping("/oglasi")
+    @ResponseBody
+    public List<Oglas> getOglasiForPoslodavac() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        User poslodavac = userService.findByEmail(authentication.getName()).orElseThrow();
+        return oglasService.findByPoslodavacId(poslodavac.getId());
     }
 
     // 3. Uređivanje oglasa
     @GetMapping("/oglasi/{oglasId}/uredi")
-    @ResponseBody
-    public Oglas getOglasForEdit(@PathVariable Long oglasId) {
-        return oglasService.findById(oglasId).orElseThrow(() -> new RuntimeException("Oglas nije pronađen."));
+    public String showEditOglasForm(@PathVariable Long oglasId, Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+
+        // Provjeri da li oglas pripada ovom poslodavcu (security na entitetu)
+        Oglas oglas = oglasService.findById(oglasId)
+                .filter(o -> o.getPoslodavac().getId().equals(poslodavac.getId()))
+                .orElseThrow(() -> new RuntimeException("Nemate pristup ovom oglasu!"));
+
+        List<Vjestina> vjestine = vjestinaService.findAll();
+        model.addAttribute("oglas", oglas);
+        model.addAttribute("vjestine", vjestine);
+        return "editOglas";
     }
 
     @PostMapping("/oglasi/{oglasId}")
@@ -80,21 +99,53 @@ public class PoslodavacController {
         return "redirect:/poslodavac/dashboard";
     }
 
-    // 4. Brisanje oglasa
+
     @PostMapping("/oglasi/{oglasId}/obrisi")
     public String deleteOglas(@PathVariable Long oglasId) {
         oglasService.deleteById(oglasId);
         return "redirect:/poslodavac/dashboard";
     }
 
-    // 5. API za prijave po oglasu (JSON)
+    /*
+    // Prijave za oglas
+    @GetMapping("/oglasi/{oglasId}/prijave")
+    public String listaPrijava(@PathVariable Long oglasId, Model model) {
+        List<Prijava> prijave = prijavaService.findByOglasId(oglasId);
+        model.addAttribute("prijave", prijave);
+        return "prijaveZaOglas";
+    }
+
+    // Detalji prijave i developera
+    @GetMapping("/prijave/{prijavaId}")
+    public String detaljiPrijave(@PathVariable Long prijavaId, Model model) {
+        Prijava prijava = prijavaService.findById(prijavaId).orElseThrow();
+        User developer = prijava.getDeveloper();
+        model.addAttribute("prijava", prijava);
+        model.addAttribute("developer", developer);
+        return "prijavaDetalji";
+    }
+
+    @PostMapping("/prijave/{prijavaId}/status")
+    public String promijeniStatus(@PathVariable Long prijavaId, @RequestParam String status) {
+        prijavaService.updatePrijavaStatus(prijavaId, status);
+        return "redirect:/poslodavac/prijave/" + prijavaId;
+    }*/
+
+
     @GetMapping("/api/oglasi/{oglasId}/prijave")
     @ResponseBody
     public List<Prijava> getPrijaveForOglas(@PathVariable Long oglasId) {
         return prijavaService.findByOglasId(oglasId);
     }
 
-    // 6. Promjena statusa prijave
+    // API za detalje developera
+    @GetMapping("/api/developer/{developerId}")
+    @ResponseBody
+    public User getDeveloperDetails(@PathVariable Long developerId) {
+        return userService.findById(developerId).orElseThrow(() -> new RuntimeException("Developer nije pronađen."));
+    }
+
+    // Promjena statusa (ostaje kao POST)
     @PostMapping("/prijave/{prijavaId}/status")
     @ResponseBody
     public String updatePrijavaStatus(@PathVariable Long prijavaId, @RequestParam String newStatus) {
@@ -102,10 +153,4 @@ public class PoslodavacController {
         return "Status prijave je uspješno ažuriran.";
     }
 
-    // 7. Detalji developera za prijavu
-    @GetMapping("/api/developer/{developerId}")
-    @ResponseBody
-    public User getDeveloperDetails(@PathVariable Long developerId) {
-        return userService.findById(developerId).orElseThrow(() -> new RuntimeException("Developer nije pronađen."));
-    }
 }
