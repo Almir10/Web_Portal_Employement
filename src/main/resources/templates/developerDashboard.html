@@ -2,169 +2,328 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-
+    <title>Developer Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
     <style>
         body {
-            background: #f5f8fa;
+            background: #f7fafd;
         }
         .navbar {
-            background-color: #2166f3;
+            background: #2166f3;
+            box-shadow: 0 2px 12px 0 rgba(33,102,243,0.08);
         }
-        .navbar-brand, .nav-link, .dropdown-item {
+        .navbar-brand {
             color: #fff !important;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 1.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .navbar .nav-link {
+            color: #e3e8f4 !important;
+            font-weight: 500;
+            margin-left: 1rem;
+            margin-right: 0;
+            transition: color 0.2s;
+            border-radius: 6px;
+        }
+        .navbar .nav-link.active, .navbar .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,0.10);
+        }
+        .navbar-avatar {
+            width: 34px;
+            height: 34px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            margin-left: 1rem;
         }
         .dashboard-card {
-            border-radius: 15px;
-            box-shadow: 0 2px 10px rgba(33,102,243,0.07);
-            border: none;
+            max-width: 950px;
+            margin: 3.5rem auto 1.5rem auto;
+            padding: 2.2rem 2rem 2rem 2rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(33,102,243,0.07);
+            border: 1.5px solid #dde6f7;
         }
-        .card-header {
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2557a7;
+            letter-spacing: 0.5px;
+            text-align: center;
+            margin-bottom: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+        .nav-tabs {
+            border-bottom: none;
+            gap: 0.5rem;
+            background: transparent;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 12px 12px 0 0;
+            background: #e8f0fe;
+            color: #2166f3;
+            font-weight: 500;
+            padding: 0.7rem 2.2rem;
+            margin-bottom: 0;
+            transition: background 0.2s, color 0.2s;
+            min-width: 140px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-tabs .nav-link.active {
             background: #2166f3;
             color: #fff;
-            border-top-left-radius: 15px;
-            border-top-right-radius: 15px;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(33,102,243,0.10);
+            z-index: 2;
+        }
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .table .btn {
+            margin-right: 0.5rem;
+        }
+        .table .btn:last-child {
+            margin-right: 0;
+        }
+        .modal-content {
+            border-radius: 16px;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #2557a7;
+        }
+        .form-control, .form-select {
+            border-radius: 7px;
+        }
+        .btn {
+            border-radius: 7px;
         }
         .btn-primary {
             background-color: #2166f3;
             border-color: #2166f3;
+            font-weight: 500;
         }
         .btn-primary:hover {
             background-color: #1852c1;
             border-color: #1852c1;
         }
         .status-badge {
-            font-size: 0.9em;
-            padding: 0.4em 0.8em;
+            font-size: 0.92em;
+            padding: 0.34em 0.96em;
             border-radius: 12px;
+            font-weight: 500;
+            letter-spacing: 0.1px;
+            box-shadow: 0 1px 2px rgba(33,102,243,0.06);
+        }
+        @media (max-width: 600px) {
+            .dashboard-card {
+                padding: 1.1rem 0.3rem;
+            }
+            .dashboard-title {
+                font-size: 1.25rem;
+                gap: 0.3rem;
+            }
+            .nav-tabs .nav-link {
+                padding: 0.5rem 0.7rem;
+                min-width: 90px;
+                font-size: 0.92rem;
+            }
         }
     </style>
-
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="#">Zapošljavanje Portal</a>
-        <div>
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" href="#" th:href="@{/poslodavacDashboard}">Dashboard</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/job-posting/new}">Nova Oglas</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" th:href="@{/logout}">Odjava</a>
-                </li>
-            </ul>
+<nav class="navbar navbar-expand-lg shadow-sm mb-3">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-code-slash" viewBox="0 0 16 16">
+                <path d="M10.478 1.647a.5.5 0 0 1 .353.612l-3 12a.5.5 0 0 1-.965-.262l3-12a.5.5 0 0 1 .612-.35zM4.854 4.646a.5.5 0 0 1 0 .708L2.207 8l2.647 2.646a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 0 1 .708 0zm6.292 0a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L13.793 8 11.146 5.354a.5.5 0 0 1 0-.708z"/>
+            </svg>
+            Developer Dashboard
+        </a>
+        <div class="d-flex align-items-center ms-auto">
+            <span class="text-white me-3 d-none d-md-block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle me-1" viewBox="0 0 16 16">
+                    <path d="M11 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 1 0 0 14A7 7 0 0 0 8 1z"/>
+                </svg>
+                Dobrodošli, <span th:text="${userName}">Ime</span>
+            </span>
+            <a class="nav-link text-danger ms-2" href="/logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-right me-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6.146 11.354a.5.5 0 0 1 0-.708l2.147-2.146H1.5a.5.5 0 0 1 0-1h6.793L6.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z"/>
+                    <path fill-rule="evenodd" d="M13.5 15A1.5 1.5 0 0 0 15 13.5v-11A1.5 1.5 0 0 0 13.5 1h-7A1.5 1.5 0 0 0 5 2.5V4a.5.5 0 0 0 1 0V2.5A.5.5 0 0 1 6.5 2h7a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5V12a.5.5 0 0 0-1 0v1.5A1.5 1.5 0 0 0 6.5 15h7z"/>
+                </svg>
+                Odjava
+            </a>
         </div>
     </div>
 </nav>
 
-<div class="container py-4">
-    <h2 class="mb-4 text-primary">Moji Oglasi za Posao</h2>
-    <div class="mb-3">
-        <a class="btn btn-primary" th:href="@{/job-posting/new}">+ Dodaj Novi Oglas</a>
+<div class="dashboard-card">
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
     </div>
-    <!-- Job Postings Table -->
-    <div class="card dashboard-card mb-4">
-        <div class="card-header">
-            <h5 class="mb-0">Aktivni Oglasi</h5>
-        </div>
-        <div class="card-body p-0">
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <h1 class="dashboard-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#2166f3" class="bi bi-person-circle" viewBox="0 0 16 16">
+            <path d="M11 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z"/>
+            <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 1 0 0 14A7 7 0 0 0 8 1z"/>
+        </svg>
+        Developer Dashboard
+    </h1>
+    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="prijave-tab" data-bs-toggle="tab" data-bs-target="#prijave" type="button" role="tab" aria-controls="prijave" aria-selected="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-briefcase me-1" viewBox="0 0 16 16">
+                    <path d="M6.5 0A1.5 1.5 0 0 0 5 1.5V3H2A2 2 0 0 0 0 5v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-3V1.5A1.5 1.5 0 0 0 9.5 0h-3Zm3.5 3V1.5a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5V3h4ZM2 4h12a1 1 0 0 1 1 1v1H1V5a1 1 0 0 1 1-1Zm13 3v5a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V7h14Z"/>
+                </svg>
+                Moje prijave
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profil-tab" data-bs-toggle="tab" data-bs-target="#profil" type="button" role="tab" aria-controls="profil" aria-selected="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person me-1" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path d="M2 13s-1 0-1-1 1-4 7-4 7 4 7 4 1 0 1 1-1 1-1 1H2z"/>
+                </svg>
+                Moj profil
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="dashboardTabsContent">
+        <!-- Moje prijave tab -->
+        <div class="tab-pane fade show active" id="prijave" role="tabpanel" aria-labelledby="prijave-tab">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
                     <thead class="table-light">
                     <tr>
                         <th>Pozicija</th>
-                        <th>Lokacija</th>
-                        <th>Tip</th>
-                        <th>Datum</th>
-                        <th>Prijave</th>
+                        <th>Kompanija</th>
                         <th>Status</th>
-                        <th>Akcije</th>
+                        <th>Datum prijave</th>
+                        <th>Akcija</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <!-- Loop over job postings -->
-                    <tr th:each="oglas : ${oglasi}">
-                        <td th:text="${oglas.pozicija}">Backend Developer</td>
-                        <td th:text="${oglas.lokacija}">Sarajevo</td>
-                        <td th:text="${oglas.tip}">Full-time</td>
-                        <td th:text="${#dates.format(oglas.datum, 'dd.MM.yyyy.')}">16.05.2025.</td>
+                    <tr th:each="prijava : ${prijave}">
+                        <td th:text="${prijava.oglas.pozicija}">Backend Developer</td>
+                        <td th:text="${prijava.oglas.poslodavac.firstName}">Kompanija</td>
                         <td>
-                            <a th:href="@{'/prijave/' + ${oglas.id}}" class="btn btn-link p-0" th:text="${oglas.prijaveCount}">3</a>
+                            <span th:classappend="'status-badge badge ' +
+                                 (${prijava.status} == 'PRIMLJEN' ? 'bg-success' :
+                                 (${prijava.status} == 'ODBIJEN' ? 'bg-danger' :
+                                 (${prijava.status} == 'U TOKU' ? 'bg-warning text-dark' : 'bg-secondary')))"
+                                  th:text="${prijava.status}">U TOKU</span>
                         </td>
+                        <td th:text="${prijava.datumPrijave != null ? #temporals.format(prijava.datumPrijave, 'dd.MM.yyyy.') : 'N/A'}">16.05.2025.</td>
                         <td>
-                                <span th:classappend="${oglas.aktivan} ? 'bg-success' : 'bg-secondary'"
-                                      class="status-badge badge"
-                                      th:text="${oglas.aktivan} ? 'Aktivan' : 'Zatvoren'">Aktivan</span>
-                        </td>
-                        <td>
-                            <a th:href="@{'/job-posting/edit/' + ${oglas.id}}" class="btn btn-sm btn-outline-primary">Uredi</a>
-                            <a th:href="@{'/job-posting/delete/' + ${oglas.id}}" class="btn btn-sm btn-outline-danger ms-1">Izbriši</a>
+                            <form th:action="@{'/developer/remove-prijava/' + ${prijava.id}}" method="post" style="display:inline;">
+                                <button class="btn btn-sm btn-outline-danger" type="submit" onclick="return confirm('Jeste li sigurni da želite povući prijavu?');">Povuci prijavu</button>
+                            </form>
                         </td>
                     </tr>
-                    <!-- If no postings -->
-                    <tr th:if="${#lists.isEmpty(oglasi)}">
-                        <td colspan="7" class="text-center py-4 text-muted">Nemate aktivnih oglasa.</td>
+                    <tr th:if="${#lists.isEmpty(prijave)}">
+                        <td colspan="5" class="text-center py-4 text-muted">Nemate prijava.</td>
                     </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-    </div>
-    <!-- Candidates/Applications Section (when a job is selected) -->
-    <div th:if="${prijave != null}">
-        <div class="card dashboard-card">
-            <div class="card-header">
-                <h5 class="mb-0">Prijave za: <span th:text="${oglasSelected.pozicija}">Backend Developer</span></h5>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
-                        <thead class="table-light">
-                        <tr>
-                            <th>Kandidat</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Datum Prijave</th>
-                            <th>Akcije</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr th:each="prijava : ${prijave}">
-                            <td>
-                                <a th:href="@{'/developer/' + ${prijava.kandidat.id}}" th:text="${prijava.kandidat.ime} + ' ' + ${prijava.kandidat.prezime}">Ime Prezime</a>
-                            </td>
-                            <td th:text="${prijava.kandidat.email}">email@example.com</td>
-                            <td>
-                                    <span th:classappend="'status-badge badge ' +
-                                         (${prijava.status} == 'PRIMLJEN' ? 'bg-success' :
-                                         (${prijava.status} == 'ODBIJEN' ? 'bg-danger' :
-                                         (${prijava.status} == 'U TOKU' ? 'bg-warning text-dark' : 'bg-secondary')))"
-                                          th:text="${prijava.status}">U TOKU</span>
-                            </td>
-                            <td th:text="${#dates.format(prijava.datumPrijave, 'dd.MM.yyyy.')}">16.05.2025.</td>
-                            <td>
-                                <a th:href="@{'/prijava/' + ${prijava.id} + '/shortlist'}" class="btn btn-sm btn-outline-success">Shortlist</a>
-                                <a th:href="@{'/prijava/' + ${prijava.id} + '/reject'}" class="btn btn-sm btn-outline-danger">Odbij</a>
-                                <a th:href="@{'/prijava/' + ${prijava.id} + '/hire'}" class="btn btn-sm btn-outline-primary">Zaposli</a>
-                            </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(prijave)}">
-                            <td colspan="5" class="text-center py-4 text-muted">Nema prijava za ovaj oglas.</td>
-                        </tr>
-                        </tbody>
-                    </table>
+
+        <!-- Moj profil tab -->
+        <div class="tab-pane fade" id="profil" role="tabpanel" aria-labelledby="profil-tab">
+            <h3 class="mb-3 mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2166f3" class="bi bi-person me-1" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path d="M2 13s-1 0-1-1 1-4 7-4 7 4 7 4 1 0 1 1-1 1-1 1H2z"/>
+                </svg>
+                Moj profil
+            </h3>
+            <form th:action="@{/developer/edit-profile}" th:object="${developer}" method="post" class="mt-4" id="edit-profile-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="firstName">Ime</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" id="firstName" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="lastName">Prezime</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" id="lastName" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="email">Email</label>
+                        <input type="text" class="form-control" th:field="*{email}" id="email" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="githubLink">GitHub</label>
+                        <input type="url" class="form-control" th:field="*{githubLink}" id="githubLink" placeholder="GitHub profil">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="linkedinLink">LinkedIn</label>
+                        <input type="url" class="form-control" th:field="*{linkedinLink}" id="linkedinLink" placeholder="LinkedIn profil">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="summary">Sažetak o Vama</label>
+                        <textarea class="form-control" th:field="*{summary}" id="summary" rows="3" placeholder="Unesite kratak sažetak o sebi, projektima, motivaciji, itd."></textarea>
+                    </div>
                 </div>
-            </div>
+                <button type="submit" class="btn btn-primary mt-3">Sačuvaj izmjene</button>
+                <button type="button" class="btn btn-outline-secondary mt-3 ms-2" data-bs-toggle="modal" data-bs-target="#promijeniSifruModal">
+                    Promijeni lozinku
+                </button>
+            </form>
         </div>
     </div>
 </div>
 
-
+<!-- Modal za promjenu šifre -->
+<div class="modal fade" id="promijeniSifruModal" tabindex="-1" aria-labelledby="promijeniSifruModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" method="post" action="/developer/promijeni-sifru">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promijeniSifruModalLabel">Promijeni lozinku</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="staraSifra" class="form-label">Stara lozinka</label>
+                    <input type="password" class="form-control" id="staraSifra" name="staraSifra" required>
+                </div>
+                <div class="mb-3">
+                    <label for="novaSifra" class="form-label">Nova lozinka</label>
+                    <input type="password" class="form-control" id="novaSifra" name="novaSifra" required>
+                </div>
+                <div class="mb-3">
+                    <label for="potvrdaSifre" class="form-label">Potvrdi novu lozinku</label>
+                    <input type="password" class="form-control" id="potvrdaSifre" name="potvrdaSifre" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
+                <button type="submit" class="btn btn-primary">Sačuvaj</button>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-
 </html>

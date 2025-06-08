@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .dashboard-card {
+            max-width: 1100px;
+            margin: 3rem auto;
+            padding: 2.5rem 2rem;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.11);
+        }
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2557a7;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        /* Stats cards */
+        .stats-row {
+            display: flex;
+            gap: 1.2rem;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .stats-card {
+            background: #f3f2f1;
+            border-radius: 12px;
+            padding: 1.2rem 1.5rem;
+            min-width: 190px;
+            flex: 1 1 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 0.25rem 0.5rem rgba(37,87,167,0.07);
+        }
+        .stats-card .icon {
+            font-size: 2.2rem;
+            color: #2557a7;
+            margin-bottom: 0.5rem;
+        }
+        .stats-card .stat-title {
+            font-size: 1.05rem;
+            color: #2557a7;
+            font-weight: 500;
+            margin-bottom: 0.15rem;
+        }
+        .stats-card .stat-value {
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #003a9b;
+        }
+        /* Tabs */
+        .nav-tabs .nav-link {
+            color: #2557a7;
+            font-weight: 600;
+        }
+        .nav-tabs .nav-link.active {
+            background-color: #2557a7;
+            color: #ffffff;
+            border: none;
+        }
+        .tab-content {
+            margin-top: 2rem;
+        }
+        /* Tables */
+        .table {
+            background: #fff;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .table thead {
+            background: #eaf0fb;
+        }
+        .table th {
+            color: #2557a7;
+            font-weight: 600;
+        }
+        .table td, .table th {
+            vertical-align: middle;
+        }
+        .btn-edit, .btn-delete {
+            font-size: 0.9rem;
+            padding: 0.25rem 0.7rem;
+            margin-right: 0.3rem;
+        }
+        .btn-edit {
+            background: #2557a7;
+            color: #fff;
+        }
+        .btn-edit:hover {
+            background: #003a9b;
+        }
+        .btn-delete {
+            background: #dc3545;
+            color: #fff;
+        }
+        .btn-delete:hover {
+            background: #a31b2b;
+        }
+        @media (max-width: 900px) {
+            .stats-row { flex-direction: column; gap: 1rem; }
+            .stats-card { min-width: 0; }
+        }
+        @media (max-width: 600px) {
+            .dashboard-card { padding: 1rem 0.25rem; }
+            .dashboard-title { font-size: 1.35rem;}
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+</head>
+<body class="bg-light">
+
+<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <div class="container-fluid">
+        <a class="navbar-brand text-primary" href="#">Admin Dashboard</a>
+        <div class="collapse navbar-collapse">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-primary" href="#">Welcome, <span th:text="${userName}"></span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-danger" href="/logout">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="dashboard-card">
+    <h1 class="dashboard-title">Admin Dashboard</h1>
+    <!-- Stats cards -->
+    <div class="stats-row mb-4">
+        <div class="stats-card">
+            <div class="icon"><i class="bi bi-people"></i></div>
+            <div class="stat-title">Korisnici</div>
+            <div class="stat-value" th:text="${brojKorisnika}">0</div>
+        </div>
+        <div class="stats-card">
+            <div class="icon"><i class="bi bi-briefcase"></i></div>
+            <div class="stat-title">Oglasi</div>
+            <div class="stat-value" th:text="${brojOglasa}">0</div>
+        </div>
+        <div class="stats-card">
+            <div class="icon"><i class="bi bi-file-earmark-check"></i></div>
+            <div class="stat-title">Prijave</div>
+            <div class="stat-value" th:text="${brojPrijava}">0</div>
+        </div>
+        <div class="stats-card">
+            <div class="icon"><i class="bi bi-lightbulb"></i></div>
+            <div class="stat-title">Vještine</div>
+            <div class="stat-value" th:text="${brojVjestina}">0</div>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <ul class="nav nav-tabs" id="adminTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">
+                Korisnici
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="oglasi-tab" data-bs-toggle="tab" data-bs-target="#oglasi" type="button" role="tab" aria-controls="oglasi" aria-selected="false">
+                Oglasi
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="prijave-tab" data-bs-toggle="tab" data-bs-target="#prijave" type="button" role="tab" aria-controls="prijave" aria-selected="false">
+                Prijave
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="vjestine-tab" data-bs-toggle="tab" data-bs-target="#vjestine" type="button" role="tab" aria-controls="vjestine" aria-selected="false">
+                Vještine
+            </button>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="adminTabsContent">
+        <!-- USERS TAB -->
+        <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
+            <h3 class="mt-3">Korisnici</h3>
+            <table class="table table-hover table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Ime</th>
+                    <th>Prezime</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Akcije</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <span th:each="role : ${user.roles}" th:text="${role.roleName}" class="badge bg-info text-dark me-1"></span>
+                    </td>
+                    <td>
+                        <form th:action="@{'/admin/users/delete/' + ${user.id}}" method="post" style="display:inline;">
+                            <button class="btn btn-delete btn-sm" onclick="return confirm('Obrisati korisnika?')">Obriši</button>
+                        </form>
+
+                        <button type="button"
+                                class="btn btn-edit btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editUserModal"
+                                th:attr="
+                                    data-user-id=${user.id},
+                                    data-first-name=${user.firstName},
+                                    data-last-name=${user.lastName},
+                                    data-email=${user.email},
+                                    data-role-id=${user.roles.size() > 0 ? user.roles.iterator().next().id : ''}
+                                ">
+                            Uredi
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="tab-pane fade" id="oglasi" role="tabpanel" aria-labelledby="oglasi-tab">
+            <h3 class="mt-3">Oglasi</h3>
+            <table class="table table-hover table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Pozicija</th>
+                    <th>Tip</th>
+                    <th>Lokacija</th>
+                    <th>Plata</th>
+                    <th>Poslodavac</th>
+                    <th>Akcije</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="oglas : ${oglasi}">
+                    <td th:text="${oglas.id}"></td>
+                    <td th:text="${oglas.pozicija}"></td>
+                    <td th:text="${oglas.tip}"></td>
+                    <td th:text="${oglas.lokacija}"></td>
+                    <td th:text="${oglas.plata}"></td>
+                    <td th:text="${oglas.poslodavac != null ? oglas.poslodavac.firstName + ' ' + oglas.poslodavac.lastName : 'N/A'}"></td>
+                    <td>
+                        <form th:action="@{'/admin/oglasi/delete/' + ${oglas.id}}" method="post" style="display:inline;">
+                            <button class="btn btn-delete btn-sm" onclick="return confirm('Obrisati oglas?')">Obriši</button>
+                        </form>
+                        <button type="button"
+                                class="btn btn-edit btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editOglasModal"
+                                th:attr="data-oglas-id=${oglas.id},
+                                 data-pozicija=${oglas.pozicija},
+                                 data-tip=${oglas.tip},
+                                 data-lokacija=${oglas.lokacija},
+                                 data-plata=${oglas.plata},
+                                 data-opis=${oglas.opis}">
+                            Uredi
+                            <span th:each="v : ${oglas.vjestine}"
+                                  th:attr="data-vjestina-id=${v.id}"
+                                  style="display:none"></span>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- PRIJAVE TAB -->
+        <div class="tab-pane fade" id="prijave" role="tabpanel" aria-labelledby="prijave-tab">
+            <h3 class="mt-3">Prijave</h3>
+            <table class="table table-hover table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Developer</th>
+                    <th>Oglas</th>
+                    <th>Status</th>
+                    <th>Datum</th>
+                    <th>Akcije</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="prijava : ${prijave}">
+                    <td th:text="${prijava.id}"></td>
+                    <td th:text="${prijava.developer != null ? prijava.developer.firstName + ' ' + prijava.developer.lastName : 'N/A'}"></td>
+                    <td th:text="${prijava.oglas != null ? prijava.oglas.pozicija : 'N/A'}"></td>
+                    <td th:text="${prijava.status}"></td>
+                    <td th:text="${prijava.datumPrijave}"></td>
+                    <td>
+                        <form th:action="@{'/admin/prijave/delete/' + ${prijava.id}}" method="post" style="display:inline;">
+                            <button class="btn btn-delete btn-sm" onclick="return confirm('Obrisati prijavu?')">Obriši</button>
+                        </form>
+
+                        <button type="button"
+                                class="btn btn-edit btn-sm"
+                                data-bs-toggle="modal"
+                                data-bs-target="#editPrijavaModal"
+                                th:attr="data-prijava-id=${prijava.id},
+                                        data-status=${prijava.status}">
+                            Uredi
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <!-- VJESTINE TAB -->
+        <div class="tab-pane fade" id="vjestine" role="tabpanel" aria-labelledby="vjestine-tab">
+            <h3 class="mt-3">Vještine</h3>
+            <table class="table table-hover table-bordered mt-3">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Naziv</th>
+                    <th>Akcije</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="vjestina : ${vjestine}">
+                    <td th:text="${vjestina.id}"></td>
+                    <td th:text="${vjestina.naziv}"></td>
+                    <td>
+                        <form th:action="@{'/admin/vjestine/delete/' + ${vjestina.id}}" method="post" style="display:inline;">
+                            <button class="btn btn-delete btn-sm" onclick="return confirm('Obrisati vještinu?')">Obriši</button>
+                        </form>
+                        <!-- Add edit button/modal if needed -->
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <h5 class="mt-4">Dodaj novu vještinu</h5>
+            <form th:action="@{/admin/vjestine/add}" method="post" class="row g-2 align-items-center">
+                <div class="col">
+                    <input type="text" class="form-control" name="naziv" placeholder="Naziv vještine" required>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Dodaj</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="editUserForm" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Uredi korisnika</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editUserId">
+                    <div class="mb-3">
+                        <label for="editFirstName" class="form-label">Ime</label>
+                        <input type="text" class="form-control" id="editFirstName" name="firstName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editLastName" class="form-label">Prezime</label>
+                        <input type="text" class="form-control" id="editLastName" name="lastName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="editEmail" name="email" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editRoles" class="form-label">Role</label>
+                        <select class="form-control" id="editRoles" name="roleId">
+                            <option th:each="role : ${allRoles}"
+                                    th:value="${role.id}"
+                                    th:text="${role.roleName}">
+                            </option>
+                        </select>
+                        <small class="form-text text-muted">Drži CTRL/CMD za izbor više rola.</small>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPassword" class="form-label">Nova lozinka (opcionalno)</label>
+                        <input type="password" class="form-control" id="editPassword" name="password" autocomplete="new-password">
+                        <small class="form-text text-muted">Ostavi prazno ako ne želiš mijenjati lozinku.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Spremi izmjene</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div class="modal fade" id="editOglasModal" tabindex="-1" aria-labelledby="editOglasModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="editOglasForm" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editOglasModalLabel">Uredi oglas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editOglasId">
+
+                    <div class="mb-3">
+                        <label for="editOglasPozicija" class="form-label">Pozicija</label>
+                        <input type="text" class="form-control" id="editOglasPozicija" name="pozicija" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editOglasTip" class="form-label">Tip</label>
+                        <input type="text" class="form-control" id="editOglasTip" name="tip" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editOglasLokacija" class="form-label">Lokacija</label>
+                        <input type="text" class="form-control" id="editOglasLokacija" name="lokacija" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editOglasPlata" class="form-label">Plata</label>
+                        <input type="number" class="form-control" id="editOglasPlata" name="plata" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editOglasOpis" class="form-label">Opis</label>
+                        <textarea class="form-control" id="editOglasOpis" name="opis" rows="3"></textarea>
+                    </div>
+                    <!-- Ako želiš edit vještina: -->
+                    <div class="mb-3">
+                        <label for="editOglasVjestine" class="form-label">Vještine</label>
+                        <select class="form-control" id="editOglasVjestine" name="vjestine" multiple>
+                            <option th:each="vjestina : ${vjestine}"
+                                    th:value="${vjestina.id}"
+                                    th:text="${vjestina.naziv}">
+                            </option>
+                        </select>
+                        <small class="form-text text-muted">Drži CTRL/CMD za više.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Spremi izmjene</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="editPrijavaModal" tabindex="-1" aria-labelledby="editPrijavaModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form id="editPrijavaForm" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editPrijavaModalLabel">Uredi status prijave</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="id" id="editPrijavaId">
+                    <div class="mb-3">
+                        <label for="editPrijavaStatus" class="form-label">Status</label>
+                        <select class="form-control" id="editPrijavaStatus" name="status" required>
+                            <option value="NA_CEKANJU">Na čekanju</option>
+                            <option value="PRIHVACENA">Prihvaćena</option>
+                            <option value="ODBIJENA">Odbijena</option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
+                    <button type="submit" class="btn btn-primary">Spremi izmjene</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+
+        var editUserModal = document.getElementById('editUserModal');
+        editUserModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var userId = button.getAttribute('data-user-id');
+            var firstName = button.getAttribute('data-first-name');
+            var lastName = button.getAttribute('data-last-name');
+            var email = button.getAttribute('data-email');
+            var roles = button.getAttribute('data-roles'); // comma separated ids
+
+            document.getElementById('editUserId').value = userId;
+            document.getElementById('editFirstName').value = firstName;
+            document.getElementById('editLastName').value = lastName;
+            document.getElementById('editEmail').value = email;
+            document.getElementById('editPassword').value = '';
+
+            var roleId = button.getAttribute('data-role-id');
+            var rolesSelect = document.getElementById('editRoles');
+            Array.from(rolesSelect.options).forEach(opt => {
+                opt.selected = (opt.value == roleId);
+            });
+            // Set form action (za submit)
+            document.getElementById('editUserForm').action = '/admin/users/edit/' + userId;
+        });
+
+        var editOglasModal = document.getElementById('editOglasModal');
+        editOglasModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            document.getElementById('editOglasId').value = button.getAttribute('data-oglas-id');
+            document.getElementById('editOglasPozicija').value = button.getAttribute('data-pozicija');
+            document.getElementById('editOglasTip').value = button.getAttribute('data-tip');
+            document.getElementById('editOglasLokacija').value = button.getAttribute('data-lokacija');
+            document.getElementById('editOglasPlata').value = button.getAttribute('data-plata');
+            document.getElementById('editOglasOpis').value = button.getAttribute('data-opis');
+
+            var vjestineIds = [];
+
+            button.querySelectorAll("span[data-vjestina-id]").forEach(function(span) {
+                vjestineIds.push(span.getAttribute("data-vjestina-id"));
+            });
+
+            var vjestineSelect = document.getElementById('editOglasVjestine');
+            Array.from(vjestineSelect.options).forEach(function(opt) {
+                opt.selected = vjestineIds.includes(opt.value);
+            });
+
+            document.getElementById('editOglasForm').action = '/admin/oglasi/edit/' + button.getAttribute('data-oglas-id');
+        });
+
+        var editPrijavaModal = document.getElementById('editPrijavaModal');
+        editPrijavaModal.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget;
+            var prijavaId = button.getAttribute('data-prijava-id');
+            var status = button.getAttribute('data-status');
+
+            document.getElementById('editPrijavaId').value = prijavaId;
+            var statusSelect = document.getElementById('editPrijavaStatus');
+            Array.from(statusSelect.options).forEach(opt => {
+                opt.selected = (opt.value === status);
+            });
+
+            document.getElementById('editPrijavaForm').action = '/admin/prijave/edit/' + prijavaId;
+        });
+
+    });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -10,4 +10,8 @@ public interface IVjestinaService {
     Optional<Vjestina> findByNazivContaining(String naziv);
 
     List<Vjestina> findAll();
+
+    void deleteById(Long id);
+
+    void saveVjestina(Vjestina vjestina);
 }

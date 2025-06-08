@@ -24,4 +24,21 @@ public class VjestinaService implements IVjestinaService{
     public List<Vjestina> findAll(){
         return vjestinaRepository.findAll();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        if (!vjestinaRepository.existsById(id)) {
+            throw new RuntimeException("Vjestina with id " + id + " does not exist");
+        }
+
+        vjestinaRepository.deleteById(id);
+    }
+
+    @Override
+    public void saveVjestina(Vjestina vjestina) {
+        if (vjestina.getNaziv() == null || vjestina.getNaziv().isEmpty()) {
+            throw new RuntimeException("Vjestina must have a valid name");
+        }
+        vjestinaRepository.save(vjestina);
+    }
 }

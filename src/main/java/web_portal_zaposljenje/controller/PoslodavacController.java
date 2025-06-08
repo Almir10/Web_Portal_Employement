@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web_portal_zaposljenje.model.Oglas;
 import web_portal_zaposljenje.model.Prijava;
 import web_portal_zaposljenje.model.User;
@@ -42,7 +43,7 @@ public class PoslodavacController {
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        // Ako koristiš CustomUserDetails, koristi:
+
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
@@ -53,6 +54,7 @@ public class PoslodavacController {
             model.addAttribute("vjestine", vjestine);
             model.addAttribute("userName", poslodavac.getFirstName());
             model.addAttribute("isPoslodavac", true);
+            model.addAttribute("poslodavac", poslodavac);
         }
         return "poslodavacDashboard";
     }
@@ -63,7 +65,7 @@ public class PoslodavacController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         User poslodavac = userService.findByEmail(authentication.getName()).orElseThrow();
         oglas.setPoslodavac(poslodavac);
-        oglasService.save(oglas, vjestinaIds);  // PROSLEDJUJEŠ OBJEKAT + ID-ove
+        oglasService.save(oglas, vjestinaIds);
         return "redirect:/poslodavac/dashboard";
     }
 
@@ -106,30 +108,65 @@ public class PoslodavacController {
         return "redirect:/poslodavac/dashboard";
     }
 
-    /*
-    // Prijave za oglas
-    @GetMapping("/oglasi/{oglasId}/prijave")
-    public String listaPrijava(@PathVariable Long oglasId, Model model) {
-        List<Prijava> prijave = prijavaService.findByOglasId(oglasId);
-        model.addAttribute("prijave", prijave);
-        return "prijaveZaOglas";
+    @GetMapping("/detalji/{id}")
+    public String prikaziPoslodavacDetalje(@PathVariable Long id, Model model) {
+        User poslodavac = userService.findById(id).orElseThrow();
+        List<Oglas> oglasi = oglasService.findByPoslodavacId(id);
+        model.addAttribute("poslodavac", poslodavac);
+        model.addAttribute("oglasi", oglasi);
+        return "poslodavacDetalji";
     }
 
-    // Detalji prijave i developera
-    @GetMapping("/prijave/{prijavaId}")
-    public String detaljiPrijave(@PathVariable Long prijavaId, Model model) {
-        Prijava prijava = prijavaService.findById(prijavaId).orElseThrow();
-        User developer = prijava.getDeveloper();
-        model.addAttribute("prijava", prijava);
-        model.addAttribute("developer", developer);
-        return "prijavaDetalji";
+
+    @GetMapping("/edit-profile")
+    public String showEditProfileForm(Model model) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+
+        model.addAttribute("poslodavac", poslodavac);
+        return "editPoslodavac";
+    }
+    @PostMapping("/edit-profile")
+    public String updateProfile(
+            @ModelAttribute("poslodavac") User updatedUser,
+            RedirectAttributes redirectAttributes) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+
+
+        userService.updateUser(poslodavac.getId(), updatedUser);
+
+        redirectAttributes.addFlashAttribute("successMessage", "Profil uspješno ažuriran!");
+        return "redirect:/poslodavac/dashboard";
     }
 
-    @PostMapping("/prijave/{prijavaId}/status")
-    public String promijeniStatus(@PathVariable Long prijavaId, @RequestParam String status) {
-        prijavaService.updatePrijavaStatus(prijavaId, status);
-        return "redirect:/poslodavac/prijave/" + prijavaId;
-    }*/
+    @PostMapping("/promijeni-sifru")
+    public String promijeniSifru(@RequestParam String staraSifra,
+                                 @RequestParam String novaSifra,
+                                 @RequestParam String potvrdaSifre,
+                                 RedirectAttributes redirectAttributes) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
+
+
+        if (!novaSifra.equals(potvrdaSifre)) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Nove lozinke se ne podudaraju.");
+            return "redirect:/poslodavac/dashboard#profil";
+        }
+
+        boolean uspjeh = userService.promijeniPasswordValidacija(poslodavac.getId(), staraSifra, novaSifra);
+
+        if (!uspjeh) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Stara lozinka nije ispravna.");
+            return "redirect:/poslodavac/dashboard#profil";
+        }
+
+        redirectAttributes.addFlashAttribute("successMessage", "Lozinka uspješno promijenjena.");
+        return "redirect:/poslodavac/dashboard#profil";
+    }
 
 
     @GetMapping("/api/oglasi/{oglasId}/prijave")
@@ -138,14 +175,14 @@ public class PoslodavacController {
         return prijavaService.findByOglasId(oglasId);
     }
 
-    // API za detalje developera
+
     @GetMapping("/api/developer/{developerId}")
     @ResponseBody
     public User getDeveloperDetails(@PathVariable Long developerId) {
         return userService.findById(developerId).orElseThrow(() -> new RuntimeException("Developer nije pronađen."));
     }
 
-    // Promjena statusa (ostaje kao POST)
+
     @PostMapping("/prijave/{prijavaId}/status")
     @ResponseBody
     public String updatePrijavaStatus(@PathVariable Long prijavaId, @RequestParam String newStatus) {

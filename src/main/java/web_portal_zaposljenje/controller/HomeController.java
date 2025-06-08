@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web_portal_zaposljenje.model.Oglas;
 import web_portal_zaposljenje.model.User;
@@ -15,7 +16,9 @@ import web_portal_zaposljenje.security.CustomUserDetails;
 import web_portal_zaposljenje.service.IOglasService;
 import web_portal_zaposljenje.service.IPrijavaService;
 import web_portal_zaposljenje.service.IUserService;
+import web_portal_zaposljenje.service.IVjestinaService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,31 +34,57 @@ public class HomeController {
     @Autowired
     private IPrijavaService prijavaService;
 
+
+    @Autowired
+    private IVjestinaService vjestinaService;
     @GetMapping("/")
-    public String showLandingPage(Model model) {
+    public String showLandingPage(
+            @RequestParam(required = false) String pozicija,
+            @RequestParam(required = false) String lokacija,
+            @RequestParam(required = false) String tip,
+            @RequestParam(required = false) Double plata,
+            @RequestParam(required = false) Long vjestinaId,
+            Model model) {
+
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 
-        System.out.println("Authentication: " + authentication);
+        System.out.println("[FILTERS] pozicija=" + pozicija + ", lokacija=" + lokacija + ", tip=" + tip + ", plata=" + plata + ", vjestinaId=" + vjestinaId);
 
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             model.addAttribute("userName", userDetails.getUsername());
 
-
             boolean isDeveloper = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_DEVELOPER"));
             boolean isPoslodavac = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_POSLODAVAC"));
+            boolean isAdmin = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
             model.addAttribute("isDeveloper", isDeveloper);
             model.addAttribute("isPoslodavac", isPoslodavac);
+            model.addAttribute("isAdmin", isAdmin);
         }
 
-
-        List<Oglas> oglasi = oglasService.findAll();
+        List<Oglas> oglasi;
+        try {
+            oglasi = oglasService.advancedSearch(pozicija, lokacija, tip, plata, vjestinaId);
+        } catch (Exception e) {
+            oglasi = List.of();
+            model.addAttribute("error", "Greška pri pretrazi: " + e.getMessage());
+            e.printStackTrace();
+        }
         model.addAttribute("oglasi", oglasi);
+
+        model.addAttribute("vjestine", vjestinaService.findAll());
+        model.addAttribute("pozicija", pozicija == null ? "" : pozicija);
+        model.addAttribute("lokacija", lokacija == null ? "" : lokacija);
+        model.addAttribute("tip", tip == null ? "" : tip);
+        model.addAttribute("plata", plata == null ? "" : plata);
+        model.addAttribute("vjestinaId", vjestinaId);
 
         return "landing";
     }
+
+
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";
@@ -88,6 +117,40 @@ public class HomeController {
         return "poslodavacDashboard";
     }
 
+    @GetMapping("/korisnik-detalji/{id}")
+    public String prikaziKorisnikDetalje(@PathVariable Long id, Model model) {
+        User korisnik = userService.findById(id).orElseThrow();
+        model.addAttribute("korisnik", korisnik);
+
+
+        boolean isPoslodavac = korisnik.getRoles().stream()
+                .anyMatch(role -> role.getRoleName().equalsIgnoreCase("POSLODAVAC"));
+        model.addAttribute("isPoslodavac", isPoslodavac);
+
+        if (isPoslodavac) {
+            List<Oglas> oglasi = oglasService.findByPoslodavacId(korisnik.getId());
+            model.addAttribute("oglasi", oglasi);
+        } else {
+            model.addAttribute("oglasi", Collections.emptyList());
+        }
+
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            model.addAttribute("userName", userDetails.getUsername());
+
+            boolean isDeveloper = userDetails.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_DEVELOPER"));
+            boolean isPoslodavacNavbar = userDetails.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_POSLODAVAC"));
+
+            model.addAttribute("isDeveloper", isDeveloper);
+            model.addAttribute("isPoslodavacNavbar", isPoslodavacNavbar);
+        }
+
+        return "korisnikDetalji";
+    }
     @GetMapping("/oglas/{oglasId}")
     public String prikaziOglasDetalje(@PathVariable Long oglasId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

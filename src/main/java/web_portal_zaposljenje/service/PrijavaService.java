@@ -76,4 +76,9 @@ public class PrijavaService implements IPrijavaService {
     public Optional<Prijava> findByOglasIdAndDeveloperEmail(Long oglasId, String email){
         return prijavaRepository.findByOglasIdAndDeveloperEmail(oglasId, email);
     }
+
+    @Override
+    public List<Prijava> findAll() {
+        return prijavaRepository.findAll();
+    }
 }

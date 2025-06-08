@@ -8,6 +8,7 @@ import web_portal_zaposljenje.model.User;
 import web_portal_zaposljenje.repository.IRoleRepository;
 import web_portal_zaposljenje.repository.IUserRepository;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -41,12 +42,12 @@ public class UserService implements IUserService {
 
         user.setRoles(roles);
 
-        // Save the user
+
         return userRepository.save(user);
     }
 
     @Override
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUserAdmin(Long id, User updatedUser, Long roleId) {
 
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("User with ID " + id + " not found."));
@@ -57,25 +58,57 @@ public class UserService implements IUserService {
         existingUser.setLastName(updatedUser.getLastName());
 
 
+        if (updatedUser.getGithubLink() != null)
+            existingUser.setGithubLink(updatedUser.getGithubLink());
+        if (updatedUser.getLinkedinLink() != null)
+            existingUser.setLinkedinLink(updatedUser.getLinkedinLink());
+        if (updatedUser.getSummary() != null)
+            existingUser.setSummary(updatedUser.getSummary());
+
+
         if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
         }
 
 
-        Set<Long> roleIds = updatedUser.getRoles()
-                .stream()
-                .map(Role::getId)
-                .collect(Collectors.toSet());
-
-        Set<Role> roles = roleIds.stream()
-                .map(roleId -> roleRepository.findById(roleId)
-                        .orElseThrow(() -> new RuntimeException("Role with ID " + roleId + " not found.")))
-                .collect(Collectors.toSet());
-
+        Role role = roleRepository.findById(roleId)
+                .orElseThrow(() -> new RuntimeException("Role with ID " + roleId + " not found."));
+        Set<Role> roles = new HashSet<>();
+        roles.add(role);
         existingUser.setRoles(roles);
+        return userRepository.save(existingUser);
+    }
+
+
+    @Override
+    public User updateUser(Long id, User updatedUser) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User with ID " + id + " not found."));
+
+
+        if (updatedUser.getGithubLink() != null)
+            existingUser.setGithubLink(updatedUser.getGithubLink());
+        if (updatedUser.getLinkedinLink() != null)
+            existingUser.setLinkedinLink(updatedUser.getLinkedinLink());
+        if (updatedUser.getSummary() != null)
+            existingUser.setSummary(updatedUser.getSummary());
 
 
         return userRepository.save(existingUser);
+    }
+
+    @Override
+    public boolean promijeniPasswordValidacija(Long userId, String oldPassword, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            return false;
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return true;
     }
 
     @Override

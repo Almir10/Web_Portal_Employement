@@ -3,77 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <title>Poslodavac Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        body {
+            background: #f7fafd;
+        }
+        /* Navbar */
+        .navbar {
+            background: #2166f3;
+            box-shadow: 0 2px 12px 0 rgba(33,102,243,0.08);
+        }
+        .navbar-brand {
+            color: #fff !important;
+            font-weight: bold;
+            letter-spacing: 1px;
+            font-size: 1.35rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .navbar .nav-link {
+            color: #e3e8f4 !important;
+            font-weight: 500;
+            margin-left: 1rem;
+            margin-right: 0;
+            transition: color 0.2s;
+            border-radius: 6px;
+        }
+        .navbar .nav-link.active, .navbar .nav-link:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,0.10);
+        }
+        .navbar-avatar {
+            width: 34px;
+            height: 34px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #fff;
+            margin-left: 1rem;
+        }
+
+        /* Dashboard card */
+        .dashboard-card {
+            max-width: 950px;
+            margin: 3.5rem auto 1.5rem auto;
+            padding: 2.2rem 2rem 2rem 2rem;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0 6px 32px rgba(33,102,243,0.07);
+            border: 1.5px solid #dde6f7;
+        }
+        .dashboard-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2557a7;
+            letter-spacing: 0.5px;
+            text-align: center;
+            margin-bottom: 2.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            justify-content: center;
+        }
+        /* Tabovi */
+        .nav-tabs {
+            border-bottom: none;
+            gap: 0.5rem;
+            background: transparent;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+        .nav-tabs .nav-link {
+            border: none;
+            border-radius: 12px 12px 0 0;
+            background: #e8f0fe;
+            color: #2166f3;
+            font-weight: 500;
+            padding: 0.7rem 2.2rem;
+            margin-bottom: 0;
+            transition: background 0.2s, color 0.2s;
+            min-width: 140px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .nav-tabs .nav-link.active {
+            background: #2166f3;
+            color: #fff;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(33,102,243,0.10);
+            z-index: 2;
+        }
+        /* Table spacing */
+        .table th, .table td {
+            vertical-align: middle;
+        }
+        .table .btn {
+            margin-right: 0.5rem;
+        }
+        .table .btn:last-child {
+            margin-right: 0;
+        }
+        /* Modal */
+        .modal-content {
+            border-radius: 16px;
+        }
+        /* Form fields */
+        .form-label {
+            font-weight: 500;
+            color: #2557a7;
+        }
+        .form-control, .form-select {
+            border-radius: 7px;
+        }
+        /* Dugmad spacing i stil */
+        .btn {
+            border-radius: 7px;
+        }
+        .btn-info {
+            color: #fff !important;
+            background: #3caeea;
+            border: none;
+        }
+        .btn-info:hover {
+            background: #2493cb;
+        }
+        .btn-warning {
+            color: #6d4700 !important;
+            background: #ffe199;
+            border: none;
+        }
+        .btn-warning:hover {
+            background: #ffd966;
+        }
+        .btn-primary {
+            background-color: #2166f3;
+            border-color: #2166f3;
+            font-weight: 500;
+        }
+        .btn-primary:hover {
+            background-color: #1852c1;
+            border-color: #1852c1;
+        }
+
+        .table .btn-group {
+            gap: 0.5rem;
+        }
+
+        @media (max-width: 600px) {
+            .dashboard-card {
+                padding: 1.1rem 0.3rem;
+            }
+            .dashboard-title {
+                font-size: 1.25rem;
+                gap: 0.3rem;
+            }
+            .nav-tabs .nav-link {
+                padding: 0.5rem 0.7rem;
+                min-width: 90px;
+                font-size: 0.92rem;
+            }
+        }
+    </style>
 </head>
-<link rel="stylesheet" href="/styles.css"> <!-- Include your global styles -->
-<style>
-    /* Centralizovana kartica */
-    .dashboard-card {
-        max-width: 800px;
-        margin: 3rem auto;
-        padding: 2rem;
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-    }
-
-    /* Stil za naslov kartice */
-    .dashboard-title {
-        font-size: 1.75rem;
-        font-weight: 700;
-        color: #2557a7;
-        text-align: center;
-        margin-bottom: 1.5rem;
-    }
-
-    /* Tabovi */
-    .nav-tabs .nav-link {
-        color: #2557a7;
-        font-weight: 600;
-    }
-
-    .nav-tabs .nav-link.active {
-        background-color: #2557a7;
-        color: #ffffff;
-        border: none;
-    }
-
-    .tab-content {
-        margin-top: 1.5rem;
-    }
-</style>
-</head>
-<body class="bg-light">
+<body>
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+<nav class="navbar navbar-expand-lg shadow-sm mb-3">
     <div class="container-fluid">
-        <a class="navbar-brand text-primary" href="#">Dashboard</a>
-        <div class="collapse navbar-collapse">
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item">
-                    <a class="nav-link text-primary" href="#">Dobrodošli, <span th:text="${userName}"></span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link text-danger" href="/logout">Odjava</a>
-                </li>
-            </ul>
+        <a class="navbar-brand" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-building" viewBox="0 0 16 16">
+                <path d="M6.5 15v-2h3v2h5V1H1v14h5.5Zm-2-2V2h7v11h-2v2H4.5Zm2-2h3v-1h-3v1Zm0-2h3V8h-3v1Zm0-2h3V6h-3v1Zm0-2h3V4h-3v1Z"/>
+            </svg>
+            Poslodavac Dashboard
+        </a>
+        <div class="d-flex align-items-center ms-auto">
+            <span class="text-white me-3 d-none d-md-block">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="currentColor" class="bi bi-person-circle me-1" viewBox="0 0 16 16">
+                    <path d="M11 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z"/>
+                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 1 0 0 14A7 7 0 0 0 8 1z"/>
+                </svg>
+                Dobrodošli, <span th:text="${userName}">Ime</span>
+            </span>
+            <a class="nav-link text-danger ms-2" href="/logout">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-box-arrow-right me-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M6.146 11.354a.5.5 0 0 1 0-.708l2.147-2.146H1.5a.5.5 0 0 1 0-1h6.793L6.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0z"/>
+                    <path fill-rule="evenodd" d="M13.5 15A1.5 1.5 0 0 0 15 13.5v-11A1.5 1.5 0 0 0 13.5 1h-7A1.5 1.5 0 0 0 5 2.5V4a.5.5 0 0 0 1 0V2.5A.5.5 0 0 1 6.5 2h7a.5.5 0 0 1 .5.5v11a.5.5 0 0 1-.5.5h-7a.5.5 0 0 1-.5-.5V12a.5.5 0 0 0-1 0v1.5A1.5 1.5 0 0 0 6.5 15h7z"/>
+                </svg>
+                Odjava
+            </a>
         </div>
     </div>
 </nav>
 
 <!-- Dashboard kartica -->
 <div class="dashboard-card">
-    <h1 class="dashboard-title">Poslodavac Dashboard</h1>
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <h1 class="dashboard-title">
+        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="#2166f3" class="bi bi-building" viewBox="0 0 16 16">
+            <path d="M6.5 15v-2h3v2h5V1H1v14h5.5Zm-2-2V2h7v11h-2v2H4.5Zm2-2h3v-1h-3v1Zm0-2h3V8h-3v1Zm0-2h3V6h-3v1Zm0-2h3V4h-3v1Z"/>
+        </svg>
+        Poslodavac Dashboard
+    </h1>
     <!-- Tabovi -->
     <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="oglasi-tab" data-bs-toggle="tab" data-bs-target="#oglasi" type="button" role="tab" aria-controls="oglasi" aria-selected="true">Lista Oglasa</button>
+            <button class="nav-link active" id="oglasi-tab" data-bs-toggle="tab" data-bs-target="#oglasi" type="button" role="tab" aria-controls="oglasi" aria-selected="true">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-list-task me-1" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/>
+                    <path d="M1.5 3.5A.5.5 0 1 1 2 3a.5.5 0 0 1-.5.5zm0 4A.5.5 0 1 1 2 7a.5.5 0 0 1-.5.5zm0 4A.5.5 0 1 1 2 11a.5.5 0 0 1-.5.5z"/>
+                </svg>
+                Lista Oglasa
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="dodaj-oglas-tab" data-bs-toggle="tab" data-bs-target="#dodaj-oglas" type="button" role="tab" aria-controls="dodaj-oglas" aria-selected="false">Dodaj Oglas</button>
+            <button class="nav-link" id="dodaj-oglas-tab" data-bs-toggle="tab" data-bs-target="#dodaj-oglas" type="button" role="tab" aria-controls="dodaj-oglas" aria-selected="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle me-1" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
+                    <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+                Dodaj Oglas
+            </button>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="prijave-tab" data-bs-toggle="tab" data-bs-target="#prijave" type="button" role="tab" aria-controls="prijave" aria-selected="false">Prijave</button>
+            <button class="nav-link" id="prijave-tab" data-bs-toggle="tab" data-bs-target="#prijave" type="button" role="tab" aria-controls="prijave" aria-selected="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person-lines-fill me-1" viewBox="0 0 16 16">
+                    <path d="M1 13.5V14h14v-.5a2.5 2.5 0 0 0-2.5-2.5h-9A2.5 2.5 0 0 0 1 13.5z"/>
+                    <path fill-rule="evenodd" d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm-7 8.5a1.5 1.5 0 0 1 1.5-1.5h9a1.5 1.5 0 0 1 1.5 1.5V14H3v-.5z"/>
+                    <path d="M1 8.5A1.5 1.5 0 0 1 2.5 7h11a1.5 1.5 0 0 1 1.5 1.5V10H1V8.5z"/>
+                </svg>
+                Prijave
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="profil-tab" data-bs-toggle="tab" data-bs-target="#profil" type="button" role="tab" aria-controls="profil" aria-selected="false">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-person me-1" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path d="M2 13s-1 0-1-1 1-4 7-4 7 4 7 4 1 0 1 1-1 1-1 1H2z"/>
+                </svg>
+                Moj profil
+            </button>
         </li>
     </ul>
 
@@ -81,68 +257,101 @@
     <div class="tab-content" id="dashboardTabsContent">
         <!-- Tab za listu oglasa -->
         <div class="tab-pane fade show active" id="oglasi" role="tabpanel" aria-labelledby="oglasi-tab">
-            <h3>Vaši oglasi</h3>
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>Pozicija</th>
-                    <th>Lokacija</th>
-                    <th>Tip</th>
-                    <th>Plata</th>
-                    <th>Akcije</th>
-
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="oglas : ${oglasi}">
-                    <td th:text="${oglas.pozicija}"></td>
-                    <td th:text="${oglas.lokacija}"></td>
-                    <td th:text="${oglas.tip}"></td>
-                    <td th:text="${oglas.plata}"></td>
-                    <td>
-                        <a th:href="@{'/poslodavac/oglasi/' + ${oglas.id} + '/uredi'}" class="btn btn-sm btn-warning">Uredi</a>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <h3 class="mb-3 mt-3"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2166f3" class="bi bi-list-task me-1" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M2 2.5a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5zm0 4a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11a.5.5 0 0 1-.5-.5z"/><path d="M1.5 3.5A.5.5 0 1 1 2 3a.5.5 0 0 1-.5.5zm0 4A.5.5 0 1 1 2 7a.5.5 0 0 1-.5.5zm0 4A.5.5 0 1 1 2 11a.5.5 0 0 1-.5.5z"/></svg> Vaši oglasi</h3>
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Pozicija</th>
+                        <th>Lokacija</th>
+                        <th>Tip</th>
+                        <th>Plata</th>
+                        <th>Akcije</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="oglas : ${oglasi}">
+                        <td th:text="${oglas.pozicija}"></td>
+                        <td th:text="${oglas.lokacija}"></td>
+                        <td th:text="${oglas.tip}"></td>
+                        <td th:text="${oglas.plata}"></td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a th:href="@{'/poslodavac/oglasi/' + ${oglas.id} + '/uredi'}" class="btn btn-sm btn-warning">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-pencil me-1" viewBox="0 0 16 16">
+                                        <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-9.439 9.439a.5.5 0 0 1-.168.11l-4 1.5a.5.5 0 0 1-.65-.65l1.5-4a.5.5 0 0 1 .11-.168l9.439-9.439ZM11.207 2.5 13.5 4.793 13.793 4.5 11.5 2.207 11.207 2.5Zm1.586 3.793L10.5 3.207 3 10.707V13h2.293l7.5-7.5ZM2.5 13.5V14H3v-.5h-.5ZM14.5 1.5 13.5.5a.5.5 0 0 0-.707.707l1 1a.5.5 0 0 0 .707-.707Z"/>
+                                    </svg>
+                                    Uredi
+                                </a>
+                                <a th:href="@{'/poslodavac/oglasi/' + ${oglas.id} + '/detalji'}" class="btn btn-sm btn-info">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-eye me-1" viewBox="0 0 16 16">
+                                        <path d="M16 8s-3-5.5-8-5.5S0 8 0 8s3 5.5 8 5.5S16 8 16 8zm-8 4.5c-3.584 0-6.538-2.797-7.684-4.5C1.462 6.297 4.416 3.5 8 3.5c3.584 0 6.538 2.797 7.684 4.5-1.146 1.703-4.1 4.5-7.684 4.5z"/>
+                                        <path d="M8 5.5a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zm0 1a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/>
+                                    </svg>
+                                    Pregled
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <!-- Tab za dodavanje oglasa -->
         <div class="tab-pane fade" id="dodaj-oglas" role="tabpanel" aria-labelledby="dodaj-oglas-tab">
-            <h3>Dodaj Novi Oglas</h3>
+            <h3 class="mb-3 mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2166f3" class="bi bi-plus-circle me-1" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/><path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/></svg>
+                Dodaj Novi Oglas
+            </h3>
             <form action="/poslodavac/oglas" method="post">
-                <div class="mb-3">
-                    <label for="pozicija" class="form-label">Pozicija</label>
-                    <input type="text" class="form-control" id="pozicija" name="pozicija" required>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="pozicija" class="form-label">Pozicija</label>
+                        <input type="text" class="form-control" id="pozicija" name="pozicija" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tip" class="form-label">Tip</label>
+                        <select class="form-control" id="tip" name="tip" required>
+                            <option value="">Izaberi tip</option>
+                            <option value="Full-time">Full-time</option>
+                            <option value="Part-time">Part-time</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lokacija" class="form-label">Lokacija</label>
+                        <input type="text" class="form-control" id="lokacija" name="lokacija" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="plata" class="form-label">Plata</label>
+                        <input type="number" class="form-control" id="plata" name="plata" required>
+                    </div>
+                    <div class="col-12">
+                        <label for="opis" class="form-label">Opis</label>
+                        <textarea class="form-control" id="opis" name="opis" rows="4" required></textarea>
+                    </div>
+                    <div class="col-12">
+                        <label for="vjestine" class="form-label">Vještine</label>
+                        <select multiple class="form-control" id="vjestine" name="vjestine">
+                            <option th:each="vjestina : ${vjestine}" th:value="${vjestina.id}" th:text="${vjestina.naziv}"></option>
+                        </select>
+                        <small class="form-text text-muted">Držite CTRL (ili CMD na Mac-u) za izbor više vještina.</small>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <label for="tip" class="form-label">Tip</label>
-                    <input type="text" class="form-control" id="tip" name="tip" required>
-                </div>
-                <div class="mb-3">
-                    <label for="lokacija" class="form-label">Lokacija</label>
-                    <input type="text" class="form-control" id="lokacija" name="lokacija" required>
-                </div>
-                <div class="mb-3">
-                    <label for="opis" class="form-label">Opis</label>
-                    <textarea class="form-control" id="opis" name="opis" rows="4" required></textarea>
-                </div>
-                <div class="mb-3">
-                    <label for="plata" class="form-label">Plata</label>
-                    <input type="number" class="form-control" id="plata" name="plata" required>
-                </div>
-                <div class="mb-3">
-                    <label for="vjestine" class="form-label">Vještine</label>
-                    <select multiple class="form-control" id="vjestine" name="vjestine">
-                        <option th:each="vjestina : ${vjestine}" th:value="${vjestina.id}" th:text="${vjestina.naziv}"></option>
-                    </select>
-                    <small class="form-text text-muted">Držite CTRL (ili CMD na Mac-u) za izbor više vještina.</small>
-                </div>
-                <button type="submit" class="btn btn-primary">Dodaj</button>
+                <button type="submit" class="btn btn-primary mt-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg me-1" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                    </svg>
+                    Dodaj
+                </button>
             </form>
         </div>
+        <!-- Tab za prijave -->
         <div class="tab-pane fade" id="prijave" role="tabpanel" aria-labelledby="prijave-tab">
-            <h3>Prijave na oglase</h3>
+            <h3 class="mb-3 mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2166f3" class="bi bi-person-lines-fill me-1" viewBox="0 0 16 16"><path d="M1 13.5V14h14v-.5a2.5 2.5 0 0 0-2.5-2.5h-9A2.5 2.5 0 0 0 1 13.5z"/><path fill-rule="evenodd" d="M10 5a2 2 0 1 1-4 0 2 2 0 0 1 4 0zm-7 8.5a1.5 1.5 0 0 1 1.5-1.5h9a1.5 1.5 0 0 1 1.5 1.5V14H3v-.5z"/><path d="M1 8.5A1.5 1.5 0 0 1 2.5 7h11a1.5 1.5 0 0 1 1.5 1.5V10H1V8.5z"/></svg>
+                Prijave na oglase
+            </h3>
             <div class="mb-3">
                 <label for="oglas-select" class="form-label">Odaberi oglas</label>
                 <select class="form-select" id="oglas-select" onchange="showPrijaveZaOglas(this.value)">
@@ -151,7 +360,6 @@
                 </select>
             </div>
             <div id="prijave-lista"></div>
-
             <!-- Modal za detalje developera -->
             <div class="modal fade" id="developerModal" tabindex="-1" aria-labelledby="developerModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -167,9 +375,77 @@
                 </div>
             </div>
         </div>
+
+        <div class="tab-pane fade" id="profil" role="tabpanel" aria-labelledby="profil-tab">
+            <h3 class="mb-3 mt-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#2166f3" class="bi bi-person me-1" viewBox="0 0 16 16">
+                    <path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"/>
+                    <path d="M2 13s-1 0-1-1 1-4 7-4 7 4 7 4 1 0 1 1-1 1-1 1H2z"/>
+                </svg>
+                Moj profil
+            </h3>
+            <form th:action="@{/poslodavac/edit-profile}" th:object="${poslodavac}" method="post" class="mt-4" id="edit-profile-form">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label" for="firstName">Ime</label>
+                        <input type="text" class="form-control" th:field="*{firstName}" id="firstName" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="lastName">Prezime</label>
+                        <input type="text" class="form-control" th:field="*{lastName}" id="lastName" readonly>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label" for="lastName">Email</label>
+                        <input type="text" class="form-control" th:field="*{email}" id="email" readonly>
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="linkedinLink">LinkedIn</label>
+                        <input type="url" class="form-control" th:field="*{linkedinLink}" id="linkedinLink" placeholder="LinkedIn profil">
+                    </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="summary">Sažetak o Vama</label>
+                        <textarea class="form-control" th:field="*{summary}" id="summary" rows="3" placeholder="Unesite kratak sažetak o sebi, svojoj firmi, prošlosti, motivaciji, itd."></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary mt-3">Sačuvaj izmjene</button>
+                <button type="button" class="btn btn-outline-secondary mt-3 ms-2" data-bs-toggle="modal" data-bs-target="#promijeniSifruModal">
+                    Promijeni lozinku
+                </button>
+            </form>
+        </div>
+
+
     </div>
 </div>
 
+<div class="modal fade" id="promijeniSifruModal" tabindex="-1" aria-labelledby="promijeniSifruModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <form class="modal-content" method="post" action="/poslodavac/promijeni-sifru">
+            <div class="modal-header">
+                <h5 class="modal-title" id="promijeniSifruModalLabel">Promijeni lozinku</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Zatvori"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="staraSifra" class="form-label">Stara lozinka</label>
+                    <input type="password" class="form-control" id="staraSifra" name="staraSifra" required>
+                </div>
+                <div class="mb-3">
+                    <label for="novaSifra" class="form-label">Nova lozinka</label>
+                    <input type="password" class="form-control" id="novaSifra" name="novaSifra" required>
+                </div>
+                <div class="mb-3">
+                    <label for="potvrdaSifre" class="form-label">Potvrdi novu lozinku</label>
+                    <input type="password" class="form-control" id="potvrdaSifre" name="potvrdaSifre" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Otkaži</button>
+                <button type="submit" class="btn btn-primary">Sačuvaj</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 <script>
     function showPrijaveZaOglas(oglasId) {
@@ -180,25 +456,41 @@
         fetch(`/poslodavac/api/oglasi/${oglasId}/prijave`)
             .then(response => response.json())
             .then(prijave => {
-                let html = '<table class="table table-sm">';
+                let html = '<table class="table table-sm align-middle">';
                 html += '<thead><tr><th>Developer</th><th>Status</th><th>Akcija</th></tr></thead><tbody>';
                 prijave.forEach(prijava => {
                     html += `<tr>
-                    <td>${prijava.developer.firstName} ${prijava.developer.lastName}</td>
-                    <td>
-                        <form onsubmit="return updateStatus(event, ${prijava.id});">
-                            <select name="newStatus" class="form-select form-select-sm d-inline w-auto">
-                                <option ${prijava.status === 'U procesu' ? 'selected' : ''}>U procesu</option>
-                                <option ${prijava.status === 'Prihvaćen' ? 'selected' : ''}>Prihvaćen</option>
-                                <option ${prijava.status === 'Odbijen' ? 'selected' : ''}>Odbijen</option>
-                            </select>
-                            <button class="btn btn-primary btn-sm">Spremi</button>
-                        </form>
-                    </td>
-                    <td>
-                        <button class="btn btn-info btn-sm" onclick="showDeveloperInfo(${prijava.developer.id})">Detalji</button>
-                    </td>
-                </tr>`;
+                        <td>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="#2166f3" class="bi bi-person-circle me-1" viewBox="0 0 16 16">
+                                <path d="M11 10a2 2 0 1 0-4 0 2 2 0 0 0 4 0z"/>
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 1 0 0 14A7 7 0 0 0 8 1z"/>
+                            </svg>
+                            ${prijava.developer.firstName} ${prijava.developer.lastName}
+                        </td>
+                        <td>
+                            <form onsubmit="return updateStatus(event, ${prijava.id});" class="d-flex align-items-center gap-2">
+                                <select name="newStatus" class="form-select form-select-sm w-auto">
+                                    <option ${prijava.status === 'U procesu' ? 'selected' : ''}>U procesu</option>
+                                    <option ${prijava.status === 'Prihvaćen' ? 'selected' : ''}>Prihvaćen</option>
+                                    <option ${prijava.status === 'Odbijen' ? 'selected' : ''}>Odbijen</option>
+                                </select>
+                                <button class="btn btn-primary btn-sm" title="Spremi status">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-save me-1" viewBox="0 0 16 16"><path d="M2 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V5.5a.5.5 0 0 0-1 0V13a1 1 0 0 1-1 1H2a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h10.293l-2.647 2.646a.5.5 0 0 0 .708.708l3.182-3.182a.5.5 0 0 0 0-.708l-3.182-3.182a.5.5 0 0 0-.708.708L12.293 2H2z"/></svg>
+                                    Spremi
+                                </button>
+                            </form>
+                        </td>
+                        <td>
+                            <button class="btn btn-info btn-sm" onclick="showDeveloperInfo(${prijava.developer.id})" title="Detalji developera">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-info-circle me-1" viewBox="0 0 16 16">
+                                    <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
+                                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 .877-.252 1.02-.797l.088-.416c.066-.3.176-.426.465-.426h.088a.5.5 0 0 0 0-1h-.088c-.63 0-.824-.254-.746-.756l.738-3.468c.194-.897-.105-1.319-.808-1.319-.545 0-.877.252-1.02.797l-.088.416c-.066.3-.176.426-.465.426h-.088a.5.5 0 0 0 0 1h.088c.63 0 .824.254.746.756z"/>
+                                    <circle cx="8" cy="4.5" r="1"/>
+                                </svg>
+                                Detalji
+                            </button>
+                        </td>
+                    </tr>`;
                 });
                 html += '</tbody></table>';
                 document.getElementById('prijave-lista').innerHTML = html;
@@ -225,7 +517,7 @@
                 document.getElementById('developer-modal-body').innerHTML = `
                 <p><strong>Ime:</strong> ${developer.firstName} ${developer.lastName}</p>
                 <p><strong>Email:</strong> ${developer.email}</p>
-                <p><strong>CV:</strong> <a href="${developer.cvLink || '#'}" target="_blank">Pogledaj CV</a></p>
+                <p><strong>Detalji:</strong> <a href="/korisnik-detalji/${developer.id}" target="_blank">Pogledaj profil developera</a></p>
                 <p><strong>Vještine:</strong> ${(developer.vjestine || []).map(v => v.naziv).join(', ')}</p>
             `;
                 var myModal = new bootstrap.Modal(document.getElementById('developerModal'));
@@ -234,7 +526,6 @@
     }
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

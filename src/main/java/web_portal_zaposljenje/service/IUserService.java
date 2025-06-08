@@ -12,7 +12,12 @@ public interface IUserService {
 
     User saveUser(User user, List<Long> roleIds);
 
+    User updateUserAdmin(Long id, User updatedUser, Long roleId);
+
     User updateUser(Long id, User updatedUser);
+
+
+    boolean promijeniPasswordValidacija(Long userId, String oldPassword, String newPassword);
 
     Optional<User> findById(Long id);
     List<User> findAll();

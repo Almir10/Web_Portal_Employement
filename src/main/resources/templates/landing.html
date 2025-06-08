@@ -13,19 +13,20 @@
   <nav class="navbar-container">
     <div class="navbar-logo">
       <a href="/">
-        <img src="https://via.placeholder.com/75x20?text=Indeed" alt="Job Portal Logo">
+        <img src="https://www.pngkey.com/png/full/262-2627815_find-best-jobs-in-our-portal-job-logo.png" alt="Job Portal Logo">
       </a>
     </div>
     <div class="navbar-links">
       <a href="/" class="navbar-link">Home</a>
       <a href="/job-posting" class="navbar-link">Job Listings</a>
       <a th:if="${userName == null}" href="/login" class="navbar-link">Login</a>
-      <a th:if="${userName == null}" href="/register" class="navbar-link sign-in">Register</a>
+      <a th:if="${userName == null}" href="/register" class="navbar-link">Register</a>
       <span th:if="${userName != null}" class="navbar-link">Welcome, <span th:text="${userName}"></span></span>
 
 
-      <a th:if="${isDeveloper}" href="/developerDashboard" class="navbar-link">Developer Dashboard</a>
-      <a th:if="${isPoslodavac}" href="/poslodavacDashboard" class="navbar-link">Poslodavac Dashboard</a>
+      <a th:if="${isDeveloper}" href="/developer/dashboard" class="navbar-link">Developer Dashboard</a>
+      <a th:if="${isPoslodavac}" href="/poslodavac/dashboard" class="navbar-link">Poslodavac Dashboard</a>
+      <a th:if="${isAdmin}" href="/admin/dashboard" class="navbar-link">Admin Dashboard</a>
 
       <form th:if="${userName != null}" action="/auth/logout" method="POST" style="display: inline;">
         <button class="navbar-link btn btn-link" type="submit">Logout</button>
@@ -46,8 +47,37 @@
       <img src="https://d3hbwax96mbv6t.cloudfront.net/title-webapp/_next/static/images/landing-header-95618769fed834ee2af073db8fedaa1e.svg" alt="Earning Potential Graphic">
     </div>
   </div>
-  <div class="search-bar">
-    <div class="search-bar-text">Start your search here!</div>
+  <div class="search-bar" style="background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 1.2rem 2rem; margin-top: 1.2rem;">
+    <div class="search-bar-text" style="margin-bottom: 1rem; font-size: 1.2rem; color: #2657a7; font-weight: 500;">
+      Start your search here!
+    </div>
+    <form method="get" action="/" class="search-form" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
+      <input type="text" name="pozicija" placeholder="Job title or keyword..." class="search-input"
+             style="flex:2; min-width: 180px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;"
+             th:value="${pozicija}" />
+      <input type="text" name="lokacija" placeholder="Location" class="search-input"
+             style="flex:1; min-width:120px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;"
+             th:value="${lokacija}" />
+      <input type="number" name="plata" placeholder="Min salary" class="search-input"
+             style="width:120px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;" min="0"
+             th:value="${plata}" />
+      <select name="tip" class="search-input"
+              style="min-width:110px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;">
+        <option value="">All types</option>
+        <option value="Full-time" th:selected="${tip == 'Full-time'}">Full-time</option>
+        <option value="Part-time" th:selected="${tip == 'Part-time'}">Part-time</option>
+      </select>
+      <select name="vjestinaId" class="search-input"
+              style="min-width:110px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;">
+        <option value="">Any skill</option>
+        <option th:each="v : ${vjestine}" th:value="${v.id}" th:text="${v.naziv}"
+                th:selected="${vjestinaId != null} ? (${v.id} == ${vjestinaId}) : false"></option>
+      </select>
+      <button type="submit" class="search-btn"
+              style="padding: 0.7rem 1.4rem; background: #2657a7; color: #fff; font-weight: 600; border: none; border-radius: 8px;">
+        Search
+      </button>
+    </form>
   </div>
 </section>
 

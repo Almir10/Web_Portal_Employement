@@ -18,4 +18,6 @@ public interface IPrijavaService {
 
 
     Optional<Prijava> findByOglasIdAndDeveloperEmail(Long oglasId, String email);
+
+    List<Prijava> findAll();
 }
