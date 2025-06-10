@@ -190,6 +190,7 @@
             <table class="table table-hover table-bordered mt-3">
                 <thead>
                 <tr>
+                    <th>Slika</th>
                     <th>ID</th>
                     <th>Ime</th>
                     <th>Prezime</th>
@@ -200,6 +201,17 @@
                 </thead>
                 <tbody>
                 <tr th:each="user : ${users}">
+                    <td class="text-center">
+                        <img th:if="${user.profilePicture != null}" th:src="@{'/images/' + ${user.profilePicture}}"
+                             alt="Profilna slika" style="width:38px; height:38px; border-radius:50%; border:1px solid #ccc;">
+                        <img th:if="${user.profilePicture == null}" th:src="@{'/images/avatar.png'}"
+                             alt="Profilna slika" style="width:38px; height:38px; border-radius:50%; border:1px solid #ccc;">
+                        <form th:if="${user.profilePicture != null}" th:action="@{'/admin/users/remove-picture/' + ${user.id}}" method="post" style="margin-top:5px;">
+                            <button class="btn btn-warning btn-sm" type="submit" onclick="return confirm('Ukloniti profilnu sliku korisnika?')">
+                                <i class="bi bi-person-x"></i>
+                            </button>
+                        </form>
+                    </td>
                     <td th:text="${user.id}"></td>
                     <td th:text="${user.firstName}"></td>
                     <td th:text="${user.lastName}"></td>
@@ -211,7 +223,6 @@
                         <form th:action="@{'/admin/users/delete/' + ${user.id}}" method="post" style="display:inline;">
                             <button class="btn btn-delete btn-sm" onclick="return confirm('Obrisati korisnika?')">Obriši</button>
                         </form>
-
                         <button type="button"
                                 class="btn btn-edit btn-sm"
                                 data-bs-toggle="modal"
@@ -222,7 +233,7 @@
                                     data-last-name=${user.lastName},
                                     data-email=${user.email},
                                     data-role-id=${user.roles.size() > 0 ? user.roles.iterator().next().id : ''}
-                                ">
+                ">
                             Uredi
                         </button>
                     </td>

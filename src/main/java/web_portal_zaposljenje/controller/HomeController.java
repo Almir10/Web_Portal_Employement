@@ -53,7 +53,16 @@ public class HomeController {
 
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            model.addAttribute("userName", userDetails.getUsername());
+            User user = userService.findByEmail(userDetails.getUsername()).orElse(null);
+            if (user != null) {
+                // Proslijedi ime (ili ime i prezime)
+                model.addAttribute("userName", user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : ""));
+                // Proslijedi ime fajla profilne slike
+                model.addAttribute("profilePicture", user.getProfilePicture());
+            } else {
+                model.addAttribute("userName", userDetails.getUsername());
+                model.addAttribute("profilePicture", null);
+            }
 
             boolean isDeveloper = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_DEVELOPER"));
             boolean isPoslodavac = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_POSLODAVAC"));
@@ -121,6 +130,7 @@ public class HomeController {
     public String prikaziKorisnikDetalje(@PathVariable Long id, Model model) {
         User korisnik = userService.findById(id).orElseThrow();
         model.addAttribute("korisnik", korisnik);
+        model.addAttribute("profilePicture", korisnik.getProfilePicture());
 
 
         boolean isPoslodavac = korisnik.getRoles().stream()

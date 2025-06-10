@@ -18,11 +18,17 @@
     </div>
     <div class="navbar-links">
       <a href="/" class="navbar-link">Home</a>
-      <a href="/job-posting" class="navbar-link">Job Listings</a>
       <a th:if="${userName == null}" href="/login" class="navbar-link">Login</a>
       <a th:if="${userName == null}" href="/register" class="navbar-link">Register</a>
-      <span th:if="${userName != null}" class="navbar-link">Welcome, <span th:text="${userName}"></span></span>
-
+      <span th:if="${userName != null}" class="navbar-link d-flex align-items-center" style="gap:8px;">
+          <img th:if="${profilePicture != null}" th:src="@{'/images/' + ${profilePicture}}"
+               alt="Profilna slika"
+               style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
+          <img th:if="${profilePicture == null}" th:src="@{'/images/avatar.png'}"
+               alt="Profilna slika"
+               style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
+    <span>Welcome, <span th:text="${userName}"></span></span>
+  </span>
 
       <a th:if="${isDeveloper}" href="/developer/dashboard" class="navbar-link">Developer Dashboard</a>
       <a th:if="${isPoslodavac}" href="/poslodavac/dashboard" class="navbar-link">Poslodavac Dashboard</a>

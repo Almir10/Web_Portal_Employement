@@ -12,12 +12,11 @@
     <nav class="navbar-container">
         <div class="navbar-logo">
             <a href="/">
-                <img src="https://via.placeholder.com/75x20?text=Indeed" alt="Job Portal Logo">
+                <img src="https://www.pngkey.com/png/full/262-2627815_find-best-jobs-in-our-portal-job-logo.png" alt="Job Portal Logo">
             </a>
         </div>
         <div class="navbar-links">
             <a href="/" class="navbar-link">Home</a>
-            <a href="/job-posting" class="navbar-link">Job Listings</a>
             <a th:if="${userName == null}" href="/login" class="navbar-link">Login</a>
             <a th:if="${userName == null}" href="/register" class="navbar-link sign-in">Register</a>
             <span th:if="${userName != null}" class="navbar-link">Welcome, <span th:text="${userName}"></span></span>
@@ -75,7 +74,7 @@
                 <div class="card-body">
                     <h5>Poslodavac</h5>
                     <p th:text="${oglas.poslodavac.firstName + ' ' + oglas.poslodavac.lastName}"></p>
-                    <a th:href="@{'/poslodavac-info/' + ${oglas.poslodavac.id}}" class="btn btn-outline-primary btn-sm mt-2">Profil poslodavca</a>
+                    <a th:href="@{'/korisnik-detalji/' + ${oglas.poslodavac.id}}" class="btn btn-outline-primary btn-sm mt-2">Profil poslodavca</a>
                 </div>
             </div>
         </div>

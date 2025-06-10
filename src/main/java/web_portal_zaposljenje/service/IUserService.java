@@ -1,6 +1,7 @@
 package web_portal_zaposljenje.service;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import web_portal_zaposljenje.model.User;
 import web_portal_zaposljenje.repository.IUserRepository;
 
@@ -14,10 +15,13 @@ public interface IUserService {
 
     User updateUserAdmin(Long id, User updatedUser, Long roleId);
 
-    User updateUser(Long id, User updatedUser);
 
+    User updateUser(Long id, User updatedUser, MultipartFile profilePicture);
 
     boolean promijeniPasswordValidacija(Long userId, String oldPassword, String newPassword);
+
+
+    void removeProfilePicture(Long userId);
 
     Optional<User> findById(Long id);
     List<User> findAll();

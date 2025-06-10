@@ -6,6 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import web_portal_zaposljenje.model.Oglas;
 import web_portal_zaposljenje.model.Prijava;
@@ -127,19 +128,23 @@ public class PoslodavacController {
         model.addAttribute("poslodavac", poslodavac);
         return "editPoslodavac";
     }
-    @PostMapping("/edit-profile")
+   @PostMapping("/edit-profile")
     public String updateProfile(
             @ModelAttribute("poslodavac") User updatedUser,
+            @RequestParam(value = "profilePictureFile", required = false) MultipartFile profilePicture,
             RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
 
 
-        userService.updateUser(poslodavac.getId(), updatedUser);
-
-        redirectAttributes.addFlashAttribute("successMessage", "Profil uspješno ažuriran!");
-        return "redirect:/poslodavac/dashboard";
+       try {
+           userService.updateUser(poslodavac.getId(), updatedUser, profilePicture);
+           redirectAttributes.addFlashAttribute("successMessage", "Profil uspješno ažuriran!");
+       } catch (Exception e) {
+           redirectAttributes.addFlashAttribute("errorMessage", "Greška prilikom snimanja slike: " + e.getMessage());
+       }
+       return "redirect:/poslodavac/dashboard#profil";
     }
 
     @PostMapping("/promijeni-sifru")

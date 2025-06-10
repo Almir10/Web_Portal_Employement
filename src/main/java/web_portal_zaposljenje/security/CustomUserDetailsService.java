@@ -17,15 +17,18 @@ public class CustomUserDetailsService implements UserDetailsService {
     private IUserRepository userRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByEmail(email);
+    public UserDetails loadUserByUsername(String usernameOrEmail) throws UsernameNotFoundException {
+        Optional<User> userOptional;
+        if ("admin".equalsIgnoreCase(usernameOrEmail)) {
+            userOptional = userRepository.findByFirstName("admin");
+        } else {
+            userOptional = userRepository.findByEmail(usernameOrEmail);
+        }
         if (userOptional.isEmpty()) {
-            throw new UsernameNotFoundException("Korisnik sa emailom: " + email + " nije pronađen.");
+            throw new UsernameNotFoundException("Korisnik nije pronađen.");
         }
 
         User user = userOptional.get();
-
-        System.out.println("Loaded password from DB: " + user.getPassword());
         return new CustomUserDetails(user);
     }
 

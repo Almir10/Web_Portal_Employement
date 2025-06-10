@@ -77,6 +77,12 @@ public class AdminController {
         return "redirect:/admin/dashboard#users";
     }
 
+    @PostMapping("/users/remove-picture/{id}")
+    public String removeUserPicture(@PathVariable Long id) {
+        userService.removeProfilePicture(id); // Dodaj ovu metodu u servis
+        return "redirect:/admin/dashboard#users";
+    }
+
     // ========================= OGLASI =========================
 
     @PostMapping("/oglasi/delete/{id}")

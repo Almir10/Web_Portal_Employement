@@ -49,6 +49,17 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @Column(name = "profile_picture", length = 255)
+    private String profilePicture;
+
+    public String getProfilePicture() {
+        return profilePicture;
+    }
+
+    public void setProfilePicture(String profilePicture) {
+        this.profilePicture = profilePicture;
+    }
+
     public String getGithubLink() {
         return githubLink;
     }
