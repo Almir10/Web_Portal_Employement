@@ -38,7 +38,7 @@ public class User {
     @Column(name="linkedin_link")
     private String linkedinLink;
 
-    @Column(name="summary", length = 500)
+    @Column(name="summary", length = 10000)
     private String summary;
 
     @ManyToMany(fetch = FetchType.EAGER)

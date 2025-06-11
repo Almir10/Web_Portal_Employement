@@ -55,9 +55,8 @@ public class HomeController {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             User user = userService.findByEmail(userDetails.getUsername()).orElse(null);
             if (user != null) {
-                // Proslijedi ime (ili ime i prezime)
+
                 model.addAttribute("userName", user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : ""));
-                // Proslijedi ime fajla profilne slike
                 model.addAttribute("profilePicture", user.getProfilePicture());
             } else {
                 model.addAttribute("userName", userDetails.getUsername());
@@ -182,7 +181,27 @@ public class HomeController {
             if (isDeveloper) {
                 alreadyApplied = prijavaService.findByOglasIdAndDeveloperEmail(oglasId, userDetails.getUsername()).isPresent();
             }
+
+
+            User user = userService.findByEmail(userDetails.getUsername()).orElse(null);
+            if (user != null) {
+                model.addAttribute("profilePicture", user.getProfilePicture());
+                // Ako želiš full ime u navbaru:
+                model.addAttribute("userName", user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : ""));
+            } else {
+                model.addAttribute("profilePicture", null);
+            }
+            if (isDeveloper) {
+                alreadyApplied = prijavaService.findByOglasIdAndDeveloperEmail(oglasId, userDetails.getUsername()).isPresent();
+            }
+
+            boolean isAdmin = userDetails.getAuthorities().stream()
+                    .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+            model.addAttribute("isAdmin", isAdmin);
+
         }
+
+
 
         model.addAttribute("isDeveloper", isDeveloper);
         model.addAttribute("isPoslodavac", isPoslodavac);

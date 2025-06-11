@@ -115,10 +115,57 @@
             font-size: 1.08rem;
             color: #222;
             margin-bottom: 0.7rem;
+            text-align: justify;
         }
         .profile-section {
             margin-bottom: 1rem;
         }
+
+        .profile-header .profile-social a {
+            color: #fff !important;
+            text-decoration: underline;
+        }
+
+        .profile-header .profile-social a:hover {
+            color: #cfe2ff !important;
+            text-decoration: underline;
+        }
+
+        .profile-social-links {
+            display: flex;
+            gap: 1.5rem;           /* moderan, jednak razmak između svih linkova */
+            flex-wrap: wrap;       /* ako ih je više, prelamaju se ispod */
+            margin-top: 1.1rem;
+            margin-bottom: 1.3rem;
+            align-items: center;   /* vertikalno centriranje ako ima više redova */
+            justify-content: flex-start; /* ili center po želji */
+        }
+        .profile-social-links a {
+            color: #2557a7;
+            font-size: 1.15rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem; /* razmak između ikone i teksta */
+        }
+        .profile-social-links a:hover {
+            color: #003a9b;
+            text-decoration: underline;
+        }
+
+        .profile-social-links a:last-child {
+            margin-right: 0;
+        }
+        .profile-social-links a:hover {
+            color: #003a9b;
+            text-decoration: underline;
+        }
+
+
+
+
         /* Oglasi */
         .oglasi-lista {
             margin-top: 1.2rem;
@@ -191,14 +238,6 @@
              class="profile-avatar">
         <div class="profile-name" th:text="${korisnik.firstName} + ' ' + ${korisnik.lastName}"></div>
         <div class="profile-role" th:text="${isPoslodavac} ? 'Poslodavac' : 'Developer'"></div>
-        <div class="profile-social" th:if="${(korisnik.githubLink != null && korisnik.githubLink != '') or (korisnik.linkedinLink != null && korisnik.linkedinLink != '')}">
-            <span th:if="${korisnik.githubLink != null && korisnik.githubLink != ''}">
-                <a th:href="${korisnik.githubLink}" target="_blank" rel="noopener"><i class="bi bi-github"></i> GitHub profil</a>
-            </span>
-            <span th:if="${korisnik.linkedinLink != null && korisnik.linkedinLink != ''}">
-                <a th:href="${korisnik.linkedinLink}" target="_blank" rel="noopener"><i class="bi bi-linkedin"></i> LinkedIn profil</a>
-            </span>
-        </div>
         <div class="profile-contact">
             <a th:href="'mailto:' + ${korisnik.email}" class="btn btn-primary">
                 <i class="bi bi-envelope"></i> <span th:text="${korisnik.email}"></span>
@@ -208,12 +247,26 @@
 
     <div class="profile-main">
         <div class="profile-row">
-            <!-- Lijeva kolona: Sažetak -->
             <div class="profile-col">
+                <div class="profile-section profile-social-links"
+                     th:if="${(korisnik.githubLink != null && korisnik.githubLink != '') or (korisnik.linkedinLink != null && korisnik.linkedinLink != '')}">
+                    <div class="profile-section-title">Društvene mreže</div>
+                    <span th:if="${korisnik.githubLink != null && korisnik.githubLink != ''}">
+                        <a th:href="${korisnik.githubLink}" target="_blank" rel="noopener">
+                            <i class="bi bi-github"></i> GitHub
+                        </a>
+                    </span>
+                    <span th:if="${korisnik.linkedinLink != null && korisnik.linkedinLink != ''}">
+                        <a th:href="${korisnik.linkedinLink}" target="_blank" rel="noopener">
+                            <i class="bi bi-linkedin"></i> LinkedIn
+                        </a>
+                    </span>
+                </div>
                 <div class="profile-section">
                     <div class="profile-section-title" th:text="${isPoslodavac} ? 'O poslodavcu' : 'O meni'"></div>
                     <div class="profile-summary" th:text="${korisnik.summary} ?: (isPoslodavac ? 'Nema unesenog opisa.' : 'Nema unesenog sažetka.')"></div>
                 </div>
+
             </div>
 
             <div class="profile-col" th:if="${isPoslodavac}">

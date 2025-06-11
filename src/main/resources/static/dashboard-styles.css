@@ -1,0 +1,348 @@
+/* ==== DASHBOARD-ONLY STYLES (Admin, Developer, Poslodavac) ==== */
+
+/* ==== Shared dashboard base resets ==== */
+html, body {
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+    font-size: 18px;
+    background: #f7fafd;
+    color: #162447;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+h1, h2, h3, h4 {
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+    font-weight: 700;
+    color: #204ecf;
+}
+
+/* ==== DASHBOARD NAVBAR ==== */
+.navbar {
+    background: #2166f3;
+    box-shadow: 0 2px 12px 0 rgba(33,102,243,0.08);
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+.navbar-brand, .navbar-home {
+    color: #fff !important;
+    font-weight: 700;
+    letter-spacing: 1px;
+    font-size: 1.35rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+.navbar-home {
+    font-size: 1.05rem;
+    font-weight: 600;
+    margin-right: 1.3rem;
+    color: #e7eaf6 !important;
+    opacity: 0.92;
+    transition: color 0.14s;
+}
+.navbar-home:hover {
+    color: #fff !important;
+    text-decoration: underline;
+    opacity: 1;
+}
+.navbar .nav-link {
+    color: #e3e8f4 !important;
+    font-weight: 500;
+    margin-left: 1rem;
+    border-radius: 7px;
+    transition: background 0.18s, color 0.18s;
+    font-size: 1.04rem;
+}
+.navbar .nav-link.active, .navbar .nav-link:hover {
+    color: #fff !important;
+    background: rgba(255,255,255,0.11);
+}
+.navbar-avatar {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    margin-left: 1rem;
+    box-shadow: 0 2px 12px rgba(21, 84, 255, 0.07);
+}
+
+/* ==== DASHBOARD CARD BASE ==== */
+.dashboard-card {
+    background: #fff;
+    margin: 3.5rem auto 1.5rem auto;
+    box-shadow: 0 6px 32px rgba(33,102,243,0.07);
+    border: 1.5px solid #dde6f7;
+    border-radius: 22px;
+    max-width: 950px;
+    padding: 2.2rem 2rem 2rem 2rem;
+}
+.dashboard-title {
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: #2557a7;
+    letter-spacing: 0.5px;
+    text-align: center;
+    margin-bottom: 2.2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    justify-content: center;
+}
+
+/* ==== ADMIN DASHBOARD OVERRIDES ==== */
+.admin-dashboard .dashboard-card {
+    max-width: 1100px;
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.11);
+}
+.admin-dashboard .dashboard-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    letter-spacing: normal;
+    display: block;
+}
+.admin-dashboard .stats-row {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.admin-dashboard .stats-card {
+    background: #f3f2f1;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    min-width: 190px;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0.25rem 0.5rem rgba(37,87,167,0.07);
+}
+.admin-dashboard .stats-card .icon {
+    font-size: 2.2rem;
+    color: #2557a7;
+    margin-bottom: 0.5rem;
+}
+.admin-dashboard .stats-card .stat-title {
+    font-size: 1.05rem;
+    color: #2557a7;
+    font-weight: 500;
+    margin-bottom: 0.15rem;
+}
+.admin-dashboard .stats-card .stat-value {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #003a9b;
+}
+.admin-dashboard .nav-tabs .nav-link {
+    color: #2557a7;
+    font-weight: 600;
+}
+.admin-dashboard .nav-tabs .nav-link.active {
+    background-color: #2557a7;
+    color: #fff;
+    border: none;
+}
+.admin-dashboard .tab-content {
+    margin-top: 2rem;
+}
+.admin-dashboard .table {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.admin-dashboard .table thead {
+    background: #eaf0fb;
+}
+.admin-dashboard .table th {
+    color: #2557a7;
+    font-weight: 600;
+}
+.admin-dashboard .table td,
+.admin-dashboard .table th {
+    vertical-align: middle;
+}
+.admin-dashboard .btn-edit,
+.admin-dashboard .btn-delete {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.7rem;
+    margin-right: 0.3rem;
+}
+.admin-dashboard .btn-edit {
+    background: #2557a7;
+    color: #fff;
+}
+.admin-dashboard .btn-edit:hover {
+    background: #003a9b;
+}
+.admin-dashboard .btn-delete {
+    background: #dc3545;
+    color: #fff;
+}
+.admin-dashboard .btn-delete:hover {
+    background: #a31b2b;
+}
+@media (max-width: 900px) {
+    .admin-dashboard .stats-row { flex-direction: column; gap: 1rem; }
+    .admin-dashboard .stats-card { min-width: 0; }
+}
+@media (max-width: 600px) {
+    .admin-dashboard .dashboard-card { padding: 1rem 0.25rem; }
+    .admin-dashboard .dashboard-title { font-size: 1.35rem;}
+}
+
+/* ==== DEVELOPER & POSLODAVAC SHARED DASHBOARD ==== */
+.stats-row {
+    display: flex;
+    gap: 1.2rem;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+.stats-card {
+    background: #f3f2f1;
+    border-radius: 12px;
+    padding: 1.2rem 1.5rem;
+    min-width: 190px;
+    flex: 1 1 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    box-shadow: 0 0.25rem 0.5rem rgba(37,87,167,0.07);
+}
+.stats-card .icon {
+    font-size: 2.2rem;
+    color: #2557a7;
+    margin-bottom: 0.5rem;
+}
+.stats-card .stat-title {
+    font-size: 1.05rem;
+    color: #2557a7;
+    font-weight: 500;
+    margin-bottom: 0.15rem;
+}
+.stats-card .stat-value {
+    font-size: 1.45rem;
+    font-weight: 700;
+    color: #003a9b;
+}
+.nav-tabs {
+    border-bottom: none;
+    gap: 0.5rem;
+    background: transparent;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+}
+.nav-tabs .nav-link {
+    border: none;
+    border-radius: 12px 12px 0 0;
+    background: #e8f0fe;
+    color: #2166f3;
+    font-weight: 500;
+    padding: 0.7rem 2.2rem;
+    margin-bottom: 0;
+    font-size: 1.05rem;
+    transition: background 0.2s, color 0.2s;
+    min-width: 148px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+.nav-tabs .nav-link.active {
+    background: linear-gradient(90deg, #2166f3 80%, #1d3bb8 100%);
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(33,102,243,0.10);
+    z-index: 2;
+}
+.tab-content {
+    margin-top: 2rem;
+}
+.table {
+    background: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+}
+.table thead {
+    background: #eaf0fb;
+    color: #204ecf;
+    font-weight: 600;
+}
+.table th, .table td {
+    vertical-align: middle;
+    font-size: 1.01rem;
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+}
+.table th {
+    color: #2557a7;
+    font-weight: 600;
+}
+.btn, .form-control, .form-select {
+    border-radius: 8px;
+    font-family: 'Inter', 'Roboto', Arial, sans-serif;
+}
+.btn-primary {
+    background-color: #2166f3;
+    border-color: #2166f3;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(33,102,243,0.10);
+    font-size: 1.02rem;
+}
+.btn-primary:hover {
+    background-color: #1852c1;
+    border-color: #1852c1;
+}
+.btn-outline-secondary,
+.btn-outline-danger,
+.btn-info,
+.btn-warning {
+    font-weight: 500;
+}
+.btn-info {
+    color: #fff !important;
+    background: #3caeea;
+    border: none;
+}
+.btn-info:hover {
+    background: #2493cb;
+}
+.btn-warning {
+    color: #6d4700 !important;
+    background: #ffe199;
+    border: none;
+}
+.btn-warning:hover {
+    background: #ffd966;
+}
+.status-badge {
+    font-size: 0.92em;
+    padding: 0.36em 1.1em;
+    border-radius: 13px;
+    font-weight: 600;
+    letter-spacing: 0.12px;
+    box-shadow: 0 1px 2px rgba(33,102,243,0.06);
+}
+.form-label {
+    font-weight: 600;
+    color: #2557a7;
+}
+.form-text, .text-muted {
+    font-size: 0.98em;
+}
+.table .btn-group {
+    gap: 0.5rem;
+}
+@media (max-width: 900px) {
+    .stats-row { flex-direction: column; gap: 1rem; }
+    .stats-card { min-width: 0; }
+}
+@media (max-width: 600px) {
+    html, body { font-size: 16px; }
+    .dashboard-card { padding: 1.1rem 0.3rem; }
+    .dashboard-title { font-size: 1.15rem; gap: 0.3rem; }
+    .nav-tabs .nav-link { padding: 0.5rem 0.7rem; min-width: 90px; font-size: 0.92rem; }
+}

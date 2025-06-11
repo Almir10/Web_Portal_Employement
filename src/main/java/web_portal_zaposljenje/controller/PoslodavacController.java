@@ -18,6 +18,7 @@ import web_portal_zaposljenje.service.IOglasService;
 import web_portal_zaposljenje.service.IUserService;
 import web_portal_zaposljenje.service.IPrijavaService;
 import web_portal_zaposljenje.service.IVjestinaService;
+import  web_portal_zaposljenje.dto.PrijavaDTO;
 
 import java.util.List;
 import java.util.Optional;
@@ -176,8 +177,11 @@ public class PoslodavacController {
 
     @GetMapping("/api/oglasi/{oglasId}/prijave")
     @ResponseBody
-    public List<Prijava> getPrijaveForOglas(@PathVariable Long oglasId) {
-        return prijavaService.findByOglasId(oglasId);
+    public List<PrijavaDTO> getPrijaveForOglas(@PathVariable Long oglasId) {
+        return prijavaService.findByOglasId(oglasId)
+                .stream()
+                .map(PrijavaDTO::new)
+                .toList();
     }
 
 
