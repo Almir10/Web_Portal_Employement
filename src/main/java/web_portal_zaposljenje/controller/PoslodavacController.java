@@ -41,7 +41,7 @@ public class PoslodavacController {
     @Autowired
     private IVjestinaService vjestinaService;
 
-    // 1. Prikaz Dashboard-a
+
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,7 +61,7 @@ public class PoslodavacController {
         return "poslodavacDashboard";
     }
 
-    // 2. Dodavanje novog oglasa
+
     @PostMapping("/oglas")
     public String createOglas(@ModelAttribute Oglas oglas, @RequestParam(value = "vjestine", required = false) List<Long> vjestinaIds) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,14 +79,14 @@ public class PoslodavacController {
         return oglasService.findByPoslodavacId(poslodavac.getId());
     }
 
-    // 3. Uređivanje oglasa
+
     @GetMapping("/oglasi/{oglasId}/uredi")
     public String showEditOglasForm(@PathVariable Long oglasId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
         User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
 
-        // Provjeri da li oglas pripada ovom poslodavcu (security na entitetu)
+
         Oglas oglas = oglasService.findById(oglasId)
                 .filter(o -> o.getPoslodavac().getId().equals(poslodavac.getId()))
                 .orElseThrow(() -> new RuntimeException("Nemate pristup ovom oglasu!"));

@@ -20,14 +20,14 @@
             <a th:if="${userName == null}" href="/login" class="navbar-link">Login</a>
             <a th:if="${userName == null}" href="/register" class="navbar-link">Register</a>
             <span th:if="${userName != null}" class="navbar-link d-flex align-items-center" style="gap:8px;">
-          <img th:if="${profilePicture != null}" th:src="@{'/images/' + ${profilePicture}}"
-               alt="Profilna slika"
-               style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
-          <img th:if="${profilePicture == null}" th:src="@{'/images/avatar.png'}"
-               alt="Profilna slika"
-               style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
-    <span>Welcome, <span th:text="${userName}"></span></span>
-  </span>
+                <img th:if="${profilePicture != null}" th:src="@{'/images/' + ${profilePicture}}"
+                     alt="Profilna slika"
+                     style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
+                <img th:if="${profilePicture == null}" th:src="@{'/images/avatar.png'}"
+                     alt="Profilna slika"
+                     style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
+                <span>Welcome, <span th:text="${userName}"></span></span>
+            </span>
             <a th:if="${isDeveloper}" href="/developer/dashboard" class="navbar-link">Developer Dashboard</a>
             <a th:if="${isPoslodavac}" href="/poslodavac/dashboard" class="navbar-link">Poslodavac Dashboard</a>
             <a th:if="${isAdmin}" href="/admin/dashboard" class="navbar-link">Admin Dashboard</a>
@@ -61,7 +61,8 @@
                     <div class="mb-2"><b>Opis:</b></div>
                     <p th:text="${oglas.opis}"></p>
                     <div class="mb-2"><b>Vještine:</b>
-                        <span th:each="v : ${oglas.vjestine}" class="badge bg-secondary me-1" th:text="${v.naziv}"></span>
+                        <span th:if="${oglas.vjestine != null}" th:each="v : ${oglas.vjestine}" class="badge bg-secondary me-1" th:text="${v.naziv}"></span>
+                        <span th:if="${oglas.vjestine == null or #lists.isEmpty(oglas.vjestine)}">Nema vještina.</span>
                     </div>
                     <!-- Prijava na oglas ili status prijave -->
                     <div class="mt-3">
@@ -75,15 +76,16 @@
                                 </form>
                             </div>
                         </div>
-                        <a th:if="${!isDeveloper && userName == null}" href="/login" class="btn btn-primary">Prijavi se</a>
+                        <a th:if="${!isDeveloper and userName == null}" href="/login" class="btn btn-primary">Prijavi se</a>
                     </div>
                 </div>
             </div>
             <div class="card">
                 <div class="card-body">
                     <h5>Poslodavac</h5>
-                    <p th:text="${oglas.poslodavac.firstName + ' ' + oglas.poslodavac.lastName}"></p>
-                    <a th:href="@{'/korisnik-detalji/' + ${oglas.poslodavac.id}}" class="btn btn-outline-primary btn-sm mt-2">Profil poslodavca</a>
+                    <p th:if="${oglas.poslodavac != null}" th:text="${oglas.poslodavac.firstName + ' ' + oglas.poslodavac.lastName}"></p>
+                    <p th:if="${oglas.poslodavac == null}">N/A</p>
+                    <a th:if="${oglas.poslodavac != null}" th:href="@{'/korisnik-detalji/' + ${oglas.poslodavac.id}}" class="btn btn-outline-primary btn-sm mt-2">Profil poslodavca</a>
                 </div>
             </div>
         </div>

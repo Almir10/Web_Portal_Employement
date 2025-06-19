@@ -46,7 +46,7 @@ public class DeveloperController {
         return "developerDashboard";
     }
 
-    // 1. GET: Edit profile forma
+
     @GetMapping("/edit-profile")
     public String editProfileForm(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

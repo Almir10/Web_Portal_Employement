@@ -48,29 +48,7 @@ public class HomeController {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-
-        System.out.println("[FILTERS] pozicija=" + pozicija + ", lokacija=" + lokacija + ", tip=" + tip + ", plata=" + plata + ", vjestinaId=" + vjestinaId);
-
-        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            User user = userService.findByEmail(userDetails.getUsername()).orElse(null);
-            if (user != null) {
-
-                model.addAttribute("userName", user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : ""));
-                model.addAttribute("profilePicture", user.getProfilePicture());
-            } else {
-                model.addAttribute("userName", userDetails.getUsername());
-                model.addAttribute("profilePicture", null);
-            }
-
-            boolean isDeveloper = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_DEVELOPER"));
-            boolean isPoslodavac = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_POSLODAVAC"));
-            boolean isAdmin = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-
-            model.addAttribute("isDeveloper", isDeveloper);
-            model.addAttribute("isPoslodavac", isPoslodavac);
-            model.addAttribute("isAdmin", isAdmin);
-        }
+        userService.dodajUserAtributeUModel(authentication, model);
 
         List<Oglas> oglasi;
         try {
@@ -91,8 +69,6 @@ public class HomeController {
 
         return "landing";
     }
-
-
     @GetMapping("/login")
     public String showLoginPage() {
         return "login";
@@ -164,47 +140,34 @@ public class HomeController {
     public String prikaziOglasDetalje(@PathVariable Long oglasId, Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
+        // Default vrijednosti za gosta
+        String userName = null;
         boolean isDeveloper = false;
         boolean isPoslodavac = false;
+        boolean isAdmin = false;
+        String profilePicture = null;
         boolean alreadyApplied = false;
 
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            model.addAttribute("userName", userDetails.getUsername());
-
+            userName = userDetails.getUsername();
+            // Ako imaš profilePicture, izvuci iz baze
+            // profilePicture = userService.findByEmail(userName).map(User::getProfilePicture).orElse(null);
             isDeveloper = userDetails.getAuthorities().stream()
                     .anyMatch(auth -> auth.getAuthority().equals("ROLE_DEVELOPER"));
             isPoslodavac = userDetails.getAuthorities().stream()
                     .anyMatch(auth -> auth.getAuthority().equals("ROLE_POSLODAVAC"));
-
-
-            if (isDeveloper) {
-                alreadyApplied = prijavaService.findByOglasIdAndDeveloperEmail(oglasId, userDetails.getUsername()).isPresent();
-            }
-
-
-            User user = userService.findByEmail(userDetails.getUsername()).orElse(null);
-            if (user != null) {
-                model.addAttribute("profilePicture", user.getProfilePicture());
-                // Ako želiš full ime u navbaru:
-                model.addAttribute("userName", user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : ""));
-            } else {
-                model.addAttribute("profilePicture", null);
-            }
-            if (isDeveloper) {
-                alreadyApplied = prijavaService.findByOglasIdAndDeveloperEmail(oglasId, userDetails.getUsername()).isPresent();
-            }
-
-            boolean isAdmin = userDetails.getAuthorities().stream()
+            isAdmin = userDetails.getAuthorities().stream()
                     .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
-            model.addAttribute("isAdmin", isAdmin);
-
+            if (isDeveloper) {
+                alreadyApplied = prijavaService.findByOglasIdAndDeveloperEmail(oglasId, userName).isPresent();
+            }
         }
-
-
-
+        model.addAttribute("userName", userName);
         model.addAttribute("isDeveloper", isDeveloper);
         model.addAttribute("isPoslodavac", isPoslodavac);
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("profilePicture", profilePicture);
         model.addAttribute("alreadyApplied", alreadyApplied);
 
         Oglas oglas = oglasService.findById(oglasId)
@@ -216,7 +179,6 @@ public class HomeController {
 
         return "oglasDetalji";
     }
-
     @PostMapping("/prijava/{oglasId}")
     public String prijaviSeNaOglas(@PathVariable Long oglasId, RedirectAttributes redirectAttributes) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

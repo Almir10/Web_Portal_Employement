@@ -72,9 +72,8 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 <script>
     document.getElementById("registration-form").addEventListener("submit", async function(event) {
-        event.preventDefault(); // Prevent the default form submission behavior
+        event.preventDefault();
 
-        // Gather form data
         const formData = {
             email: document.getElementById("email").value,
             password: document.getElementById("password").value,
@@ -83,7 +82,7 @@
             roleIds: Array.from(document.getElementById("roles").selectedOptions).map(option => parseInt(option.value))
         };
 
-        // Basic client-side validation
+
         const confirmPassword = document.getElementById("confirmPassword").value;
         if (formData.password !== confirmPassword) {
             document.getElementById("error-message").style.display = "block";
@@ -92,7 +91,7 @@
         }
 
         try {
-            const response = await fetch("/auth/register", {
+            const response = await fetch("/users/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

@@ -31,7 +31,7 @@ public class AdminController {
     @Autowired
     private IRoleService roleService;
 
-    // Prikaz admin dashboarda (sve na jednoj stranici)
+
     @GetMapping("/dashboard")
     public String showAdminDashboard(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -79,7 +79,7 @@ public class AdminController {
 
     @PostMapping("/users/remove-picture/{id}")
     public String removeUserPicture(@PathVariable Long id) {
-        userService.removeProfilePicture(id); // Dodaj ovu metodu u servis
+        userService.removeProfilePicture(id);
         return "redirect:/admin/dashboard#users";
     }
 
@@ -119,7 +119,6 @@ public class AdminController {
         return "redirect:/admin/dashboard#vjestine";
     }
 
-    // Dodavanje i edit vještine (po potrebi)
 
 
     @PostMapping("/vjestine/add")

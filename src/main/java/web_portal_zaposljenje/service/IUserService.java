@@ -1,7 +1,10 @@
 package web_portal_zaposljenje.service;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import web_portal_zaposljenje.dto.RegistrationRequest;
 import web_portal_zaposljenje.model.User;
 import web_portal_zaposljenje.repository.IUserRepository;
 
@@ -10,6 +13,8 @@ import java.util.Optional;
 
 
 public interface IUserService {
+
+    User register(RegistrationRequest request);
 
     User saveUser(User user, List<Long> roleIds);
 
@@ -22,6 +27,8 @@ public interface IUserService {
 
 
     void removeProfilePicture(Long userId);
+
+    void dodajUserAtributeUModel(Authentication authentication, Model model);
 
     Optional<User> findById(Long id);
     List<User> findAll();

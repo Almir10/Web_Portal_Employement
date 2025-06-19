@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import web_portal_zaposljenje.dto.RegistrationRequest;
 import web_portal_zaposljenje.model.User;
 import web_portal_zaposljenje.service.IUserService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -17,11 +19,16 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-   /* @PostMapping("")
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User savedUser = userService.saveUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedUser);
-    }*/
+
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@RequestBody RegistrationRequest request) {
+        try {
+            userService.register(request);
+            return ResponseEntity.ok().body(Map.of("message", "Registration successful!"));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
+        }
+    }
 
     @GetMapping("{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
@@ -30,22 +37,14 @@ public class UserController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+
+
     @GetMapping()
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.findAll();
         return ResponseEntity.ok(users);
     }
 
-   /* @PutMapping("{id}")
-    public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody User userDetails) {
-        try {
-            User updatedUser = userService.updateUser(id, userDetails);
-            return ResponseEntity.ok(updatedUser);
-        } catch (RuntimeException e) {
-            return ResponseEntity.notFound().build();
-        }
-    }
-*/
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
         if (userService.existsById(id)) {

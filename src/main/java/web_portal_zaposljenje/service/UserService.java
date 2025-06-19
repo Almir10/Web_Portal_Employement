@@ -2,13 +2,17 @@ package web_portal_zaposljenje.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+import web_portal_zaposljenje.dto.RegistrationRequest;
 import web_portal_zaposljenje.model.Role;
 import web_portal_zaposljenje.model.User;
 import web_portal_zaposljenje.repository.IRoleRepository;
 import web_portal_zaposljenje.repository.IUserRepository;
+import web_portal_zaposljenje.security.CustomUserDetails;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +38,26 @@ public class UserService implements IUserService {
 
     @Value("${app.upload.dir}")
     private String uploadDir;
+
+
+    @Override
+    public User register(RegistrationRequest request) {
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
+
+        Set<Role> roles = request.getRoleIds().stream()
+                .map(id -> roleRepository.findById(id)
+                        .orElseThrow(() -> new RuntimeException("Role with ID " + id + " not found")))
+                .collect(Collectors.toSet());
+
+        user.setRoles(roles);
+
+        return userRepository.save(user);
+    }
+
     @Override
     public User saveUser(User user, List<Long> roleIds) {
 
@@ -149,6 +173,30 @@ public class UserService implements IUserService {
             userRepository.save(user);
         }
     }
+
+    @Override
+    public void dodajUserAtributeUModel(Authentication authentication, Model model) {
+        if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            User user = findByEmail(userDetails.getUsername()).orElse(null);
+            if (user != null) {
+                model.addAttribute("userName", user.getFirstName() + (user.getLastName() != null ? " " + user.getLastName() : ""));
+                model.addAttribute("profilePicture", user.getProfilePicture());
+            } else {
+                model.addAttribute("userName", userDetails.getUsername());
+                model.addAttribute("profilePicture", null);
+            }
+
+            boolean isDeveloper = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_DEVELOPER"));
+            boolean isPoslodavac = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_POSLODAVAC"));
+            boolean isAdmin = userDetails.getAuthorities().stream().anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+
+            model.addAttribute("isDeveloper", isDeveloper);
+            model.addAttribute("isPoslodavac", isPoslodavac);
+            model.addAttribute("isAdmin", isAdmin);
+        }
+    }
+
 
     @Override
     public Optional<User> findById(Long id) {
