@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>web-portal-zaposljenje</artifactId>
+	<artifactId>web-portal-zaposlenje</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>web-portal-zaposljenje</name>
 	<description>Web Portal za Zaposlenje Developera</description>
