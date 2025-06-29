@@ -110,25 +110,8 @@ public class PoslodavacController {
         return "redirect:/poslodavac/dashboard";
     }
 
-    @GetMapping("/detalji/{id}")
-    public String prikaziPoslodavacDetalje(@PathVariable Long id, Model model) {
-        User poslodavac = userService.findById(id).orElseThrow();
-        List<Oglas> oglasi = oglasService.findByPoslodavacId(id);
-        model.addAttribute("poslodavac", poslodavac);
-        model.addAttribute("oglasi", oglasi);
-        return "poslodavacDetalji";
-    }
 
 
-    @GetMapping("/edit-profile")
-    public String showEditProfileForm(Model model) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-        User poslodavac = userService.findByEmail(userDetails.getUsername()).orElseThrow();
-
-        model.addAttribute("poslodavac", poslodavac);
-        return "editPoslodavac";
-    }
    @PostMapping("/edit-profile")
     public String updateProfile(
             @ModelAttribute("poslodavac") User updatedUser,
