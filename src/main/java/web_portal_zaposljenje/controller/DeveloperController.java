@@ -13,6 +13,7 @@ import web_portal_zaposljenje.model.User;
 import web_portal_zaposljenje.security.CustomUserDetails;
 import web_portal_zaposljenje.service.IPrijavaService;
 import web_portal_zaposljenje.service.IUserService;
+import web_portal_zaposljenje.service.IVjestinaService;
 
 import java.util.List;
 
@@ -26,6 +27,9 @@ public class DeveloperController {
     @Autowired
     private IPrijavaService prijavaService;
 
+    @Autowired
+    private IVjestinaService vjestinaService;
+
 
     @GetMapping("/dashboard")
     public String showDashboard(Model model) {
@@ -36,6 +40,7 @@ public class DeveloperController {
 
             List<Prijava> prijave = prijavaService.findByDeveloperId(developer.getId());
             model.addAttribute("prijave", prijave);
+            model.addAttribute("vjestine", vjestinaService.findAll());
             model.addAttribute("developer", developer);
             model.addAttribute("userName", developer.getFirstName());
             model.addAttribute("lastName", developer.getLastName());

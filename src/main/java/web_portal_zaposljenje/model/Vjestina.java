@@ -21,6 +21,9 @@ public class Vjestina {
     @ManyToMany(mappedBy = "vjestine")
     private Set<Oglas> oglasi = new HashSet<>();
 
+    @ManyToMany(mappedBy = "vjestine")
+    private Set<User> users = new HashSet<>();
+
     public Long getId() {
         return Id;
     }

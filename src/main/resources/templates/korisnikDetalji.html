@@ -267,6 +267,14 @@
                     <div class="profile-summary" th:text="${korisnik.summary} ?: (isPoslodavac ? 'Nema unesenog opisa.' : 'Nema unesenog sažetka.')"></div>
                 </div>
 
+                <div class="profile-section">
+                    <div class="profile-section-title">Vještine</div>
+                    <div>
+                        <span th:if="${korisnik.vjestine != null}" th:each="v : ${korisnik.vjestine}" class="badge bg-secondary me-1 mb-1" th:text="${v.naziv}"></span>
+                        <span th:if="${korisnik.vjestine == null or #lists.isEmpty(korisnik.vjestine)}">Nema vještina.</span>
+                    </div>
+                </div>
+
             </div>
 
             <div class="profile-col" th:if="${isPoslodavac}">

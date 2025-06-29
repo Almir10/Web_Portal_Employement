@@ -51,6 +51,16 @@ public class User {
     @Column(name = "profile_picture", length = 255)
     private String profilePicture;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_vjestina",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "vjestina_id")
+    )
+    private Set<Vjestina> vjestine = new HashSet<>();
+
+
+
     public String getProfilePicture() {
         return profilePicture;
     }
@@ -128,7 +138,15 @@ public class User {
         return this.roles;
     }
 
+    public Set<Vjestina> getVjestine() {
+        return this.vjestine;
+    }
+
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public void setVjestine(Set<Vjestina> vjestine) {
+        this.vjestine = vjestine;
     }
 }

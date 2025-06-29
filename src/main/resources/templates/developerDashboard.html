@@ -172,6 +172,17 @@
                         <label class="form-label" for="summary">Sažetak o Vama</label>
                         <textarea class="form-control" th:field="*{summary}" id="summary" rows="3" placeholder="Unesite kratak sažetak o sebi, projektima, motivaciji, itd."></textarea>
                     </div>
+                    <div class="col-md-12">
+                        <label class="form-label" for="vjestine">Vještine</label>
+                        <select multiple class="form-control select-multi" th:field="*{vjestine}" id="vjestine" name="vjestine">
+                            <option th:each="vjestina : ${vjestine}"
+                                    th:value="${vjestina.id}"
+                                    th:text="${vjestina.naziv}"
+                                    th:selected="${developer.vjestine.contains(vjestina)}">
+                            </option>
+                        </select>
+                        <small class="form-text text-muted">Držite CTRL (ili CMD) za izbor više vještina.</small>
+                    </div>
                 </div>
                 <button type="submit" class="btn btn-primary mt-3">Sačuvaj izmjene</button>
                 <button type="button" class="btn btn-outline-secondary mt-3 ms-2" data-bs-toggle="modal" data-bs-target="#promijeniSifruModal">

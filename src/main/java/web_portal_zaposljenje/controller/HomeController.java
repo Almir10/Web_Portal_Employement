@@ -151,8 +151,7 @@ public class HomeController {
         if (authentication != null && authentication.isAuthenticated() && !"anonymousUser".equals(authentication.getPrincipal())) {
             CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
             userName = userDetails.getUsername();
-            // Ako imaš profilePicture, izvuci iz baze
-            // profilePicture = userService.findByEmail(userName).map(User::getProfilePicture).orElse(null);
+
             isDeveloper = userDetails.getAuthorities().stream()
                     .anyMatch(auth -> auth.getAuthority().equals("ROLE_DEVELOPER"));
             isPoslodavac = userDetails.getAuthorities().stream()

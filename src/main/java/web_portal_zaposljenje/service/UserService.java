@@ -10,8 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 import web_portal_zaposljenje.dto.RegistrationRequest;
 import web_portal_zaposljenje.model.Role;
 import web_portal_zaposljenje.model.User;
+import web_portal_zaposljenje.model.Vjestina;
 import web_portal_zaposljenje.repository.IRoleRepository;
 import web_portal_zaposljenje.repository.IUserRepository;
+import web_portal_zaposljenje.repository.IVjestinaRepository;
 import web_portal_zaposljenje.security.CustomUserDetails;
 
 import java.io.File;
@@ -35,6 +37,9 @@ public class UserService implements IUserService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private IVjestinaRepository vjestinaRepository;
 
     @Value("${app.upload.dir}")
     private String uploadDir;
@@ -142,6 +147,18 @@ public class UserService implements IUserService {
                 throw new RuntimeException("Greška pri uploadu slike: " + e.getMessage());
             }
         }
+
+        Set<Long> vjestinaIds = updatedUser.getVjestine()
+                .stream()
+                .map(Vjestina::getId)
+                .collect(Collectors.toSet());
+
+        Set<Vjestina> vjestine = vjestinaIds.stream()
+                .map(vjestinaId -> vjestinaRepository.findById(vjestinaId)
+                        .orElseThrow(() -> new RuntimeException("Vještina sa ID-em " + vjestinaId + " nije pronađena.")))
+                .collect(Collectors.toSet());
+
+        existingUser.setVjestine(vjestine);
 
         return userRepository.save(existingUser);
     }
