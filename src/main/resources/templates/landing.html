@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="bs" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Welcome</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-  <link rel="stylesheet" href="/styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dobrodošli</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+  <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
 <!-- Header -->
@@ -13,75 +13,61 @@
   <nav class="navbar-container">
     <div class="navbar-logo">
       <a href="/">
-        <img src="https://www.pngkey.com/png/full/262-2627815_find-best-jobs-in-our-portal-job-logo.png" alt="Job Portal Logo">
+        <img src="https://www.pngkey.com/png/full/262-2627815_find-best-jobs-in-our-portal-job-logo.png" alt="Logo portala za posao" />
       </a>
     </div>
     <div class="navbar-links">
-      <a href="/" class="navbar-link">Home</a>
-      <a th:if="${userName == null}" href="/login" class="navbar-link">Login</a>
-      <a th:if="${userName == null}" href="/register" class="navbar-link">Register</a>
+      <a href="/" class="navbar-link">Početna</a>
+      <a th:if="${userName == null}" href="/login" class="navbar-link">Prijava</a>
+      <a th:if="${userName == null}" href="/register" class="navbar-link">Registracija</a>
       <span th:if="${userName != null}" class="navbar-link d-flex align-items-center" style="gap:8px;">
-          <img th:if="${profilePicture != null}" th:src="@{'/images/' + ${profilePicture}}"
-               alt="Profilna slika"
-               style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
-          <img th:if="${profilePicture == null}" th:src="@{'/images/avatar.png'}"
-               alt="Profilna slika"
-               style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;">
-    <span>Welcome, <span th:text="${userName}"></span></span>
-  </span>
+        <img th:if="${profilePicture != null}" th:src="@{'/images/' + ${profilePicture}}" alt="Profilna slika" style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;" />
+        <img th:if="${profilePicture == null}" th:src="@{'/images/avatar.png'}" alt="Profilna slika" style="width:32px; height:32px; border-radius:50%; border:1px solid #ccc; object-fit:cover;" />
+        <span>Dobrodošli, <span th:text="${userName}"></span></span>
+      </span>
 
       <a th:if="${isDeveloper}" href="/developer/dashboard" class="navbar-link">Developer Dashboard</a>
       <a th:if="${isPoslodavac}" href="/poslodavac/dashboard" class="navbar-link">Poslodavac Dashboard</a>
       <a th:if="${isAdmin}" href="/admin/dashboard" class="navbar-link">Admin Dashboard</a>
 
       <form th:if="${userName != null}" action="/auth/logout" method="POST" style="display: inline;">
-        <button class="navbar-link btn btn-link" type="submit">Logout</button>
+        <button class="navbar-link btn btn-link" type="submit">Odjava</button>
       </form>
     </div>
-    <button class="menu-button" aria-label="Open Menu">&#9776;</button>
+    <button class="menu-button" aria-label="Otvori meni">&#9776;</button>
   </nav>
 </header>
 
-<!-- Hero Section -->
+<!-- Hero Sekcija -->
 <section class="hero-section">
   <div class="hero-content">
     <div class="hero-text">
-      <h2 class="hero-title">Discover your earning potential</h2>
-      <p class="hero-subtitle">Explore high-paying careers, salaries, and job openings by industry and location.</p>
+      <h2 class="hero-title">Otkrijte svoj potencijal!</h2>
+      <p class="hero-subtitle">Istražite visoko plaćene poslove, plate i slobodna radna mjesta po vašem izboru!.</p>
     </div>
     <div class="hero-image">
-      <img src="https://d3hbwax96mbv6t.cloudfront.net/title-webapp/_next/static/images/landing-header-95618769fed834ee2af073db8fedaa1e.svg" alt="Earning Potential Graphic">
+      <img src="https://d3hbwax96mbv6t.cloudfront.net/title-webapp/_next/static/images/landing-header-95618769fed834ee2af073db8fedaa1e.svg" alt="Grafika potencijala zarade" />
     </div>
   </div>
   <div class="search-bar" style="background: #fff; border-radius: 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.07); padding: 1.2rem 2rem; margin-top: 1.2rem;">
     <div class="search-bar-text" style="margin-bottom: 1rem; font-size: 1.2rem; color: #2657a7; font-weight: 500;">
-      Start your search here!
+      Počnite pretragu ovdje!
     </div>
     <form method="get" action="/" class="search-form" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: center;">
-      <input type="text" name="pozicija" placeholder="Job title or keyword..." class="search-input"
-             style="flex:2; min-width: 180px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;"
-             th:value="${pozicija}" />
-      <input type="text" name="lokacija" placeholder="Location" class="search-input"
-             style="flex:1; min-width:120px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;"
-             th:value="${lokacija}" />
-      <input type="number" name="plata" placeholder="Min salary" class="search-input"
-             style="width:120px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;" min="0"
-             th:value="${plata}" />
-      <select name="tip" class="search-input"
-              style="min-width:110px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;">
-        <option value="">All types</option>
-        <option value="Full-time" th:selected="${tip == 'Full-time'}">Full-time</option>
-        <option value="Part-time" th:selected="${tip == 'Part-time'}">Part-time</option>
+      <input type="text" name="pozicija" placeholder="Naziv posla ili ključna riječ..." class="search-input" style="flex:2; min-width: 180px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;" th:value="${pozicija}" />
+      <input type="text" name="lokacija" placeholder="Lokacija" class="search-input" style="flex:1; min-width:120px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;" th:value="${lokacija}" />
+      <input type="number" name="plata" placeholder="Minimalna plata" class="search-input" style="width:120px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;" min="0" th:value="${plata}" />
+      <select name="tip" class="search-input" style="min-width:110px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;">
+        <option value="">Svi tipovi</option>
+        <option value="Full-time" th:selected="${tip == 'Full-time'}">Puno radno vrijeme</option>
+        <option value="Part-time" th:selected="${tip == 'Part-time'}">Skraćeno radno vrijeme</option>
       </select>
-      <select name="vjestinaId" class="search-input"
-              style="min-width:110px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;">
-        <option value="">Any skill</option>
-        <option th:each="v : ${vjestine}" th:value="${v.id}" th:text="${v.naziv}"
-                th:selected="${vjestinaId != null} ? (${v.id} == ${vjestinaId}) : false"></option>
+      <select name="vjestinaId" class="search-input" style="min-width:110px; padding: 0.7rem 1rem; border-radius: 8px; border: 1px solid #d7deea;">
+        <option value="">Bilo koja vještina</option>
+        <option th:each="v : ${vjestine}" th:value="${v.id}" th:text="${v.naziv}" th:selected="${vjestinaId != null} ? (${v.id} == ${vjestinaId}) : false"></option>
       </select>
-      <button type="submit" class="search-btn"
-              style="padding: 0.7rem 1.4rem; background: #2657a7; color: #fff; font-weight: 600; border: none; border-radius: 8px;">
-        Search
+      <button type="submit" class="search-btn" style="padding: 0.7rem 1.4rem; background: #2657a7; color: #fff; font-weight: 600; border: none; border-radius: 8px;">
+        Pretraži
       </button>
     </form>
   </div>
@@ -95,30 +81,27 @@
           <h5 class="card-title" th:text="${oglas.pozicija}"></h5>
           <h6 class="card-subtitle mb-2 text-muted" th:text="${oglas.lokacija}"></h6>
           <p class="card-text" th:text="${#strings.abbreviate(oglas.opis, 100)}"></p>
-          <p class="mb-1"><strong>Plata:</strong>
-            <span th:text="${#numbers.formatInteger(oglas.plata, 0, 'COMMA')}"></span> KM
-          </p>
+          <p class="mb-1"><strong>Plata:</strong> <span th:text="${#numbers.formatInteger(oglas.plata, 0, 'COMMA')}"></span> KM</p>
           <a th:href="@{'/oglas/' + ${oglas.id}}" class="btn btn-primary btn-sm">Detalji</a>
         </div>
       </div>
     </div>
   </div>
-
 </main>
 
 <!-- Footer -->
 <footer class="footer">
   <div class="footer-content container">
     <div class="footer-links">
-      <a href="#" class="footer-link">About</a>
-      <a href="#" class="footer-link">Privacy Policy</a>
-      <a href="#" class="footer-link">Terms of Service</a>
-      <a href="#" class="footer-link">Contact Us</a>
+      <a href="#" class="footer-link">O nama</a>
+      <a href="#" class="footer-link">Politika privatnosti</a>
+      <a href="#" class="footer-link">Uvjeti korištenja</a>
+      <a href="#" class="footer-link">Kontakt</a>
     </div>
-    <p class="footer-text">&copy; 2025 Job Portal. All rights reserved.</p>
+    <p class="footer-text">&copy; 2025 Portal za Posao. Sva prava zadržana.</p>
   </div>
 </footer>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
