@@ -17,7 +17,6 @@
       </a>
     </div>
     <div class="navbar-links">
-      <a href="/" class="navbar-link">Početna</a>
       <a th:if="${userName == null}" href="/login" class="navbar-link">Prijava</a>
       <a th:if="${userName == null}" href="/register" class="navbar-link">Registracija</a>
       <span th:if="${userName != null}" class="navbar-link d-flex align-items-center" style="gap:8px;">
