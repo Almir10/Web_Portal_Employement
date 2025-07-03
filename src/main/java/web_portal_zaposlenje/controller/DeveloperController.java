@@ -121,11 +121,6 @@ public class DeveloperController {
         return "redirect:/developer/dashboard";
     }
 
-    @GetMapping("/detalji/{id}")
-    public String prikaziDeveloperDetalje(@PathVariable Long id, Model model) {
-        User developer = userService.findById(id).orElseThrow();
-        model.addAttribute("developer", developer);
-        return "developerDetalji";
-    }
+
 
 }
