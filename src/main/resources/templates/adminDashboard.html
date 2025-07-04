@@ -40,7 +40,6 @@
 </nav>
 <div class="dashboard-card">
     <h1 class="dashboard-title">Admin Dashboard</h1>
-    <!-- Stats cards -->
     <div class="stats-row mb-4">
         <div class="stats-card">
             <div class="icon"><i class="bi bi-people"></i></div>
@@ -64,7 +63,7 @@
         </div>
     </div>
 
-    <!-- Tabs -->
+    <!-- Tabovi -->
     <ul class="nav nav-tabs" id="adminTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="users-tab" data-bs-toggle="tab" data-bs-target="#users" type="button" role="tab" aria-controls="users" aria-selected="true">
@@ -89,7 +88,7 @@
     </ul>
 
     <div class="tab-content" id="adminTabsContent">
-        <!-- USERS TAB -->
+        <!-- User Tab -->
         <div class="tab-pane fade show active" id="users" role="tabpanel" aria-labelledby="users-tab">
             <h3 class="mt-3">Korisnici</h3>
             <table class="table table-hover table-bordered mt-3">
@@ -250,7 +249,6 @@
                         <form th:action="@{'/admin/vjestine/delete/' + ${vjestina.id}}" method="post" style="display:inline;">
                             <button class="btn btn-delete btn-sm" onclick="return confirm('Obrisati vještinu?')">Obriši</button>
                         </form>
-                        <!-- Add edit button/modal if needed -->
                     </td>
                 </tr>
                 </tbody>
@@ -350,7 +348,6 @@
                         <label for="editOglasOpis" class="form-label">Opis</label>
                         <textarea class="form-control" id="editOglasOpis" name="opis" rows="3"></textarea>
                     </div>
-                    <!-- Ako želiš edit vještina: -->
                     <div class="mb-3">
                         <label for="editOglasVjestine" class="form-label">Vještine</label>
                         <select class="form-control" id="editOglasVjestine" name="vjestine" multiple>
@@ -411,7 +408,7 @@
             var firstName = button.getAttribute('data-first-name');
             var lastName = button.getAttribute('data-last-name');
             var email = button.getAttribute('data-email');
-            var roles = button.getAttribute('data-roles'); // comma separated ids
+            var roles = button.getAttribute('data-roles');
 
             document.getElementById('editUserId').value = userId;
             document.getElementById('editFirstName').value = firstName;

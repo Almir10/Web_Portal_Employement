@@ -340,13 +340,13 @@ main.container {
 
 .form-group input:focus {
     outline: none;
-    border-color: #2557a7; /* Blue border on focus */
+    border-color: #2557a7;
     box-shadow: 0 0 0.25rem rgba(37, 87, 167, 0.5);
 }
 
-/* Login button */
+
 .btn-primary {
-    background-color: #2557a7; /* Primary blue */
+    background-color: #2557a7;
     color: #ffffff;
     font-size: 1rem;
     font-weight: 700;
@@ -358,13 +358,13 @@ main.container {
 }
 
 .btn-primary:hover {
-    background-color: #003a9b; /* Darker blue on hover */
+    background-color: #003a9b;
 }
 
-/* Footer text */
+
 .form-footer {
     font-size: 0.875rem;
-    color: #6c757d; /* Subtle gray */
+    color: #6c757d;
     margin-top: 1.5rem;
 }
 
